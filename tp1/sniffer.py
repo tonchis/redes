@@ -8,5 +8,5 @@ def callback(package):
 config.sniff_promisc = True
 
 if __name__ == "__main__":
-    sniffed = sniff(prn = callback, filter = "arp", store = 0)
+    sniff(prn = callback, filter = "arp", store = 0)
 
