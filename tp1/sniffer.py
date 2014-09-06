@@ -1,9 +1,12 @@
 #! /usr/bin/env python
 from scapy.all import *
 
-def monitor_callback(package):
-    print package.summary()
+def callback(package):
+    arp = package.getlayer(ARP)
+    print str(arp.psrc) + " > " + str(arp.pdst)
+
+config.sniff_promisc = True
 
 if __name__ == "__main__":
-    sniffed = sniff(prn = monitor_callback, filter = "arp", store = 2)
+    sniffed = sniff(prn = callback, filter = "arp", store = 0)
 
