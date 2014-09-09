@@ -7,7 +7,10 @@ sys.path.append("tp1")
 import helpers
 
 def write_pcap_file():
+    print ""
+    print "Building tmp/sniffed.pcap..."
     wrpcap("tmp/sniffed.pcap", sniffed)
+    print "Done."
 
 atexit.register(write_pcap_file)
 
