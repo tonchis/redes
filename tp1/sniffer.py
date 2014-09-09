@@ -1,6 +1,10 @@
 #! /usr/bin/env python
 from scapy.all import *
-import atexit
+import atexit, sys
+
+sys.path.append("tp1")
+
+import helpers
 
 def write_pcap_file():
     wrpcap("tmp/sniffed.pcap", sniffed)
