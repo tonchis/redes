@@ -50,7 +50,7 @@ def ips_in_sample(arp_sample):
 #
 # arp_sample: [ARPSample] the Tuple representing the sample.
 #
-# return: [IPFrequency]
+# return: [IPFrequency] the Tuple representing the frequency.
 def frequency_of_occurrence(arp_sample):
     ips = ips_in_sample(arp_sample)
     sample_size = len(arp_sample.src) # dst is the same length.
