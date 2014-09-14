@@ -1,7 +1,7 @@
+from __future__ import division
 import scapy.utils
 import collections
 import math
-from __future__ import division
 
 # Sample of ARP packages.
 #
