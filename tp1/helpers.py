@@ -68,7 +68,7 @@ def frequency_of_occurrence(arp_sample):
 def entropy(arp_sample):
     frequency = frequency_of_occurrence(arp_sample)
 
-    weighted_information = lambda x: math.log(x, 2) * x
+    weighted_information = lambda x: 0.0 if x == 0.0 else -math.log(x, 2) * x
 
     src_weighted_information = map(weighted_information, frequency.src)
     dst_weighted_information = map(weighted_information, frequency.dst)
