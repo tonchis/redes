@@ -3,8 +3,8 @@ import collections
 
 # Sample of ARP packages.
 #
-# ARPSample#src: [List] holds all the source ips in the sample.
-# ARPSample#dst: [List] holds all the destination ips in the sample.
+# ARPSample#src: [List[String]] holds all the source ips in the sample.
+# ARPSample#dst: [List[String]] holds all the destination ips in the sample.
 ARPSample = collections.namedtuple("ARPSample", ["src", "dst"])
 
 # Count the occurrances of each ip in an ARPSample.
@@ -17,6 +17,7 @@ IPOccurrence = collections.namedtuple("IPOccurrence", ["src", "dst"])
 # For each ARP package in the sample, we extract the source and destination ips.
 #
 # pcap_file: [String] path to the ARP pcap file.
+#
 # return: [ARPSample]
 def load_sources(pcap_file):
     arp_packages = scapy.utils.rdpcap(pcap_file)
@@ -32,14 +33,16 @@ def load_sources(pcap_file):
 # All the ips seen in a given sample, both as source and destination.
 #
 # arp_sample: [ARPSample] the Tuple representing the sample.
-# return: [Set] all the ips are strings.
+#
+# return: [Set[String]] all the ips.
 def ips_in_sample(arp_sample):
     return set(arp_sample.src).union(set(arp_sample.dst))
 
 # Count how many times each ip in the sample was seen as source and destination.
 #
 # arp_sample: [ARPSample] the Tuple representing the sample.
-# return: [Dict] keys are ips [String] and values are occurrences [IPOccurrence].
+#
+# return: [Dict[String][IPOccurrence]] keys are ips and values are occurrences.
 def count_occurrences(arp_sample):
     ips = ips_in_sample(arp_sample)
     occurrences = {}
