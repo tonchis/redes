@@ -1,12 +1,29 @@
-import scapy.layers.l2
+import scapy.utils
+import collections
 
-ARP = scapy.layers.l2.ARP
+ARPSources = collections.namedtuple("ARPSources", ["src", "dst"])
+IPOccurrence = collections.namedtuple("IPOccurrence", ["src", "dst"])
 
-def who_has(package):
-    if package.haslayer(ARP):
-        arp = package.getlayer(ARP)
-        return arp.op == arp.who_has
-    return False
+def load_sources(pcap_file):
+    arp_packages = scapy.utils.rdpcap(pcap_file)
 
-def arp_source_destination_print(package):
-    return package.sprintf("%ARP.psrc%,%ARP.pdst%")
+    arp_sources = ARPSources(src=[], dst=[])
+
+    for package in arp_packages:
+        arp_sources.src.append(package.psrc)
+        arp_sources.dst.append(package.pdst)
+
+    return arp_sources
+
+def ips_in_sample(arp_sources):
+    return set(arp_sources.src).union(set(arp_sources.dst))
+
+def count_occurrences(arp_sources):
+    ips = ips_in_sample(arp_sources)
+    occurrences = {}
+
+    for ip in ips:
+        occurrences[ip] = IPOccurrence(src=arp_sources.src.count(ip), dst=arp_sources.dst.count(ip))
+
+    return occurrences
+
