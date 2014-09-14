@@ -17,8 +17,8 @@ IPFrequency = collections.namedtuple("IPFrequency", ["src", "dst"])
 
 # Sotres entropy of the ARPSample.
 #
-# ARPSampleEntropy#src: [Int] entropy of source.
-# ARPSampleEntropy#dst: [Int] entropy of destination.
+# ARPSampleEntropy#src: [Float] entropy of source.
+# ARPSampleEntropy#dst: [Float] entropy of destination.
 ARPSampleEntropy = collections.namedtuple("ARPSampleEntropy", ["src", "dst"])
 
 # Turn a ARP sample pcap file into a Tuple of ips.
