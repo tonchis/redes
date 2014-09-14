@@ -16,7 +16,7 @@ IPOccurrence = collections.namedtuple("IPOccurrence", ["src", "dst"])
 # Turn a ARP sample pcap file into a Tuple of ips.
 # For each ARP package in the sample, we extract the source and destination ips.
 #
-# pcap_file: [String] path to the ARP pcap file.
+# pcap_file: [String] relative path to the ARP pcap file.
 #
 # return: [ARPSample]
 def load_sources(pcap_file):
