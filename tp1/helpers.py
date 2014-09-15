@@ -9,18 +9,6 @@ import math
 # ARPSample#dst: [List[String]] holds all the destination ips in the sample.
 ARPSample = collections.namedtuple("ARPSample", ["src", "dst"])
 
-# Count the relative frequency of each ip in the ARPSample.
-#
-# IPFrequency#src: [List[Float]] the relative frequency of each ip in the sample as a source address.
-# IPFrequency#dst: [List[Float]] the relative frequency of each ip in the sample as a destination address.
-IPFrequency = collections.namedtuple("IPFrequency", ["src", "dst"])
-
-# Sotres entropy of the ARPSample.
-#
-# ARPSampleEntropy#src: [Float] entropy of source.
-# ARPSampleEntropy#dst: [Float] entropy of destination.
-ARPSampleEntropy = collections.namedtuple("ARPSampleEntropy", ["src", "dst"])
-
 # Turn a ARP sample pcap file into a Tuple of ips.
 # For each ARP package in the sample, we extract the source and destination ips.
 #
@@ -38,7 +26,7 @@ def load_sample(pcap_file):
 
     return arp_sample
 
-# All the ips seen in a given sample, both as source and destination.
+# All the ips seen in a given sample, both as source and destination, without repetition.
 #
 # arp_sample: [ARPSample] the Tuple representing the sample.
 #
@@ -46,19 +34,30 @@ def load_sample(pcap_file):
 def ips_in_sample(arp_sample):
     return set(arp_sample.src).union(set(arp_sample.dst))
 
-# Count the relative frequency of each ip in the sample.
+# Holds the relative frequency of each ip in the ARPSample.
+#
+# IPFrequency#src: [List[Float]] the relative frequency of each ip in the sample as a source address.
+# IPFrequency#dst: [List[Float]] the relative frequency of each ip in the sample as a destination address.
+IPFrequency = collections.namedtuple("IPFrequency", ["src", "dst"])
+
+# Calculate the relative frequency of each ip in the sample.
 #
 # arp_sample: [ARPSample] the Tuple representing the sample.
 #
 # return: [IPFrequency] the Tuple representing the frequency.
 def frequency_of_occurrence(arp_sample):
     ips = ips_in_sample(arp_sample)
-    sample_size = len(arp_sample.src) # dst is the same length.
 
-    src_frequency = map(lambda ip: arp_sample.src.count(ip) / sample_size, ips)
-    dst_frequency = map(lambda ip: arp_sample.dst.count(ip) / sample_size, ips)
+    return IPFrequency(src=relative_frequency(ips, arp_sample.src), dst=relative_frequency(ips, arp_sample.dst))
 
-    return IPFrequency(src=src_frequency, dst=dst_frequency)
+def relative_frequency(ips, sample):
+    return map(lambda ip: sample.count(ip) / len(sample), ips)
+
+# Holds the entropy of the ARPSample.
+#
+# ARPSampleEntropy#src: [Float] entropy of source.
+# ARPSampleEntropy#dst: [Float] entropy of destination.
+ARPSampleEntropy = collections.namedtuple("ARPSampleEntropy", ["src", "dst"])
 
 # Calculates the entropy of the sample.
 #
@@ -68,12 +67,11 @@ def frequency_of_occurrence(arp_sample):
 def entropy(arp_sample):
     frequency = frequency_of_occurrence(arp_sample)
 
+    return ARPSampleEntropy(src=map_reduce_entropy(frequency.src), dst=map_reduce_entropy(frequency.dst))
+
+def map_reduce_entropy(frequencies):
     weighted_information = lambda x: 0.0 if x == 0.0 else -math.log(x, 2) * x
-
-    src_weighted_information = map(weighted_information, frequency.src)
-    dst_weighted_information = map(weighted_information, frequency.dst)
-
     add = lambda x, y: x + y
 
-    return ARPSampleEntropy(src=reduce(add, src_weighted_information), dst=reduce(add, dst_weighted_information))
+    return reduce(add, map(weighted_information, frequencies))
 
