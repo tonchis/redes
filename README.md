@@ -2,8 +2,6 @@
 
 For academic purposes
 
-=====
-
 ##env Setup
 
 Run `source .env/bin/activate` in the console before running the `iPython` console.
