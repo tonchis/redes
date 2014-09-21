@@ -27,3 +27,9 @@ About the difference between `import somemodule` and `from somemodule import *`
 ##Exporting functional data from Wireshark
 In Wireshark, use the `arp.opcode == 1 && !arp.isgratuitous` filter (arp.opcode corresponds to the ARP data and !arp.isgratuitous leaves out gratuitous requests).
 Once the filter is applied, you have to export (not `save as`) by going to `File/Export Specified Packets`. In that window, after you chose the filename and directory, you have to select the `All packets` Packet Range to the left, and then chose the `Displayed` tab, to leave out those that don't match the filter. Then just click the `Save` button.
+
+##TGF from .pcap files
+TGF stands for Trivial Graphf Format and is a simple plain text format for describing graphs.
+Once exported functional data from Wireshark into a .pcap file,  you could create a .tgf file with graph information ready to be plot.
+1-Open a shell and move to the tp1 directory. 
+2- Run the following command 'python tgfpcap.py pcapfile > outputfile.tgf' where 'pcapfile'' stands for the pcap file you want to operate with and 'outputfile' refers to the file you want to save the output to. Programs like Yed are able to open and operate with .tgf files. 
