@@ -15,8 +15,8 @@ ARPSample = collections.namedtuple("ARPSample", ["src", "dst"])
 # pcap_file: [String] relative path to the ARP pcap file.
 #
 # return: [ARPSample]
-def load_sample(pcap_file):
-    arp_packages = scapy.utils.rdpcap(pcap_file)
+def load_sample(pcap_file, count=-1):
+    arp_packages = scapy.utils.rdpcap(pcap_file, count)
 
     arp_sample = ARPSample(src=[], dst=[])
 
