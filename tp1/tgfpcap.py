@@ -4,7 +4,7 @@ import scapy.all
 
 
 if len(sys.argv)<1:
-	sys.exit("python tgfpcap.py path/to/pcapfile")
+	sys.exit("python tgfpcap.py path/to/pcapfile numberofpackagestoread")
 
 # nodes  = list of ips in the network. since i need the order i can't use sets
 nodes = list()
@@ -12,7 +12,7 @@ nodes = list()
 edges = list()
 
 #read pcap file
-packages = scapy.utils.rdpcap(sys.argv[1])
+packages = scapy.utils.rdpcap(sys.argv[1], int(sys.argv[2]))
 
 for package in packages:
 	if not (package.psrc in nodes):	
