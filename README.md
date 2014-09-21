@@ -1,5 +1,4 @@
 #Teoría de las comunicaciones
-=====
 
 For academic purposes
 
