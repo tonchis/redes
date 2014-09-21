@@ -1,23 +1,18 @@
 #!/usr/bin/evn python
 import sys
-import scapy.utils
-# the input expected in this script for each line:
-# Who has dstIP Tell srcIP 
-#
+import scapy.all
 
 
 if len(sys.argv)<1:
-	sys.exit("python tgfpcap.py path")
+	sys.exit("python tgfpcap.py path/to/pcapfile")
 
 # nodes  = list of ips in the network. since i need the order i can't use sets
 nodes = list()
 #edges = string "src dst"
 edges = list()
 
-#f = open(sys.argv[1],'r')
-
-sys.path.append("tp1")
-packages = scapy.utils.rdpcap("facultad46arp.pcap")
+#read pcap file
+packages = scapy.utils.rdpcap(sys.argv[1])
 
 for package in packages:
 	if not (package.psrc in nodes):	
@@ -39,5 +34,4 @@ print "#"
 for j in range(len(edges)):
 	print edges[j]
 
-#f.close()
 
