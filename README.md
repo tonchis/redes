@@ -16,6 +16,7 @@ To start testing the methods included in the helpers file, each time the `iPytho
 ```
 import sys
 sys.path.append("tp1")
+sys.path.append("tmp")
 import helpers
 import scapy.all
 ```
