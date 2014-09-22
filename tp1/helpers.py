@@ -3,7 +3,7 @@ import scapy.utils
 import collections
 import math
 
-# Sample of ARP packages.
+# Sample of ARP packets.
 #
 # ARPSample#src: [List[String]] holds all the source ips in the sample.
 # ARPSample#dst: [List[String]] holds all the destination ips in the sample.
@@ -16,11 +16,11 @@ ARPSample = collections.namedtuple("ARPSample", ["src", "dst"])
 #
 # return: [ARPSample]
 def load_sample(pcap_file, count=-1):
-    arp_packages = scapy.utils.rdpcap(pcap_file, count)
+    arp_packets = scapy.utils.rdpcap(pcap_file, count)
 
     arp_sample = ARPSample(src=[], dst=[])
 
-    for package in arp_packages:
+    for package in arp_packets:
         arp_sample.src.append(package.psrc)
         arp_sample.dst.append(package.pdst)
 
@@ -71,7 +71,10 @@ def entropy(arp_sample):
 
 def map_reduce_entropy(frequencies):
     weighted_information = lambda x: 0.0 if x == 0.0 else -math.log(x, 2) * x
-    add = lambda x, y: x + y
-
     return reduce(add, map(weighted_information, frequencies))
 
+def add(x, y):
+    return x + y
+
+def count_packets_between(arp_sample, src, dst):
+    return reduce(add, list((1 if arp_sample.src[index] == src and arp_sample.dst[index] == dst else 0) for index in range(len(arp_sample.src))))
