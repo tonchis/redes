@@ -1,0 +1,52 @@
+% ------ headers globales -------------
+%11pt, , twoside
+\documentclass[a4paper]{article}
+\usepackage{caratula}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{url}
+\usepackage[normalem]{ulem}
+
+\begin{document}{}
+
+% -------------------------------------
+% -- Carátula --
+\newpage{\pagestyle{empty}\input{caratula}}
+
+\setcounter{page}{1}
+
+%-- Indice --
+\newpage{\pagestyle{empty}\tableofcontents\cleardoublepage}
+
+
+\input{introduccion.tex}
+\newpage
+
+\input{desarrollo.tex}
+\newpage
+
+\input{experimentacion.tex}
+
+\newpage
+
+\input{conclusiones.tex}
+
+
+	%-- Bibliografia --
+	%\subsection{Bibliografía}
+	%\begin{thebibliography}{99}
+%		\bibitem{lib:brassard} G. Brassard, P. Bratley, \textit{Fundamental of Algorithmics}, Prentice Hall,  1996, Chapter 6.2, \enquote{General characteristics of greedy algoritmhs}, Chapter 9.6, \enquote{Backtracking}, 
+%		\bibitem{lib:cormen} Cormen, Leiserson, Rivest \textit{Introduction to Algorithms}, 2001, Chapter 16 \enquote{Greedy Algorithms}.
+%		\bibitem{stl:stl} \texttt{http://www.cplusplus.com/reference/stl/}
+		%\bibitem{stl:set} \texttt{http://www.cplusplus.com/reference%/set/set/}
+%		\bibitem{stl:vector} \texttt{http://www.cplusplus.com/reference/vector/vector/}
+%		\bibitem{stl:pqueue} \texttt{http://www.cplusplus.com/reference/queue/priority\_queue/}
+%		\bibitem{wiki:greedy} \texttt{http://en.wikipedia.org/wiki/Greedy\_algorithm\#Specifics}
+%		\bibitem{wiki:back} \texttt{http://en.wikipedia.org/wiki/Backtracking\#Usage\_considerations}
+%	\end{thebibliography}
+	
+
+
+\end{document}

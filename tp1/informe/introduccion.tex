@@ -1,0 +1,36 @@
+\section{Introducción}
+
+\subsection{Address Resolution Protocol}
+
+\indent \indent  Se refiere con \textit{Address Resolution Protocol} (o ARP) a un protocolo utilizado para resolver direcciones de la capa de la red a direcciones de la capa de enlace. Se trata de un protocolo de \textit{request and reply} y sólo se utiliza dentro de los límites de una red.\\
+\indent ARP es usualmente puesto en uso para relacionar direcciones IP's con direcciones físicas, como una dirección MAC.\\
+\indent Existen dos tipos de paquetes ARP en el protocolo, diferenciados por la función que realizan: 
+\begin{itemize}
+\item Los paquetes \textbf{who-has} son aquellos paquetes de petición enviados por un dispositivo de forma broadcast a los demás nodos de la red. Su función es, dicho coloquialmente, preguntar cuál es el nodo que posee una determinada dirección IP.
+\item Los paquetes \textbf{is-at} son los paquetes de respuesta. Son enviados de manera unicast a quién haya hecho la petición de la dirección IP, informando la dirección MAC correspondiente a dicha IP. 
+\end{itemize}
+
+\indent De los distintos componentes de un paquete ARP, nos enfocaremos en los siguientes:
+\begin{itemize}
+\item \textbf{Operation}: Especifica la operación que se está realizando. 1 para petición y 2 para respuesta.
+\item \textbf{Sender Hardware Address}: La dirección MAC del emisor. Para los paquetes de tipo who-has indica la dirección del que haya realizado el pedido. En los paquetes is-at se corresponde con la dirección que se peticionó.
+\item \textbf{Sender Protocol Address}: En nuestro caso, la dirección IP del emisor.
+\item \textbf{Target Hardware Address}: Ignorado en los paquetes de petición. En los paquetes is-at contiene la dirección MAC del host que realizó el pedido.
+\item \textbf{Target Protocol Address}: En nuestro caso, la dirección IP del receptor.
+\end{itemize}
+
+\subsection{Entropía}
+
+\indent \indent En teoría de la información se entiende por \textbf{entropía} a la cantidad promedio de información contenida en un mensaje recibido, donde por \textit{mensaje} se refiere a un evento o una muestra de un conjunto de datos. De alguna forma, la entropía muestra nuestra incerteza respecto de de una fuente de información.\\
+\indent La idea es que mientras menos probable sea un evento, su ocurrencia proporcionará más información.\\
+\indent Basada en un modelo probabilístico, la fórmula cerrada para calcular la entropía de una fuente con k eventos probables es:\\
+\\
+\indent \indent \indent \indent \indent \indent \indent \indent \indent \indent - $\sum \limits_{i=1}^k p_i * \log{p_i}$ \\
+
+\newline
+\indent La unidad de la entropía depende de la base del logartimo elegida para calcularla.\\
+
+\subsection{Sobre el objetivo del trabajo práctico}
+
+\indent \indent En este trabajo práctico se nos requirió realizar una \textit{tool} para capturar paquetes de diversas red. Una vez capturados los paquetes, el objetivo fue calcular las entropías de dos fuentes: conformadas por as direcciones origen de los paquetes ARP who-has, por un lado, y de las direcciones destino de los mismos paquetes por el otro.\\
+\indent Finalmente, se nos pidió realizar un análisis con los datos que obtuvimos. Para ello se nos recomendó realizar histogramas y grafos dirigidos donde el nodo origen se corresponde con la dirección emisora y el nodo destino con la dirección pedida en los paquetes ARP who-has.
