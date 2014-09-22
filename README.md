@@ -33,3 +33,21 @@ TGF stands for Trivial Graphf Format and is a simple plain text format for descr
 Once exported functional data from Wireshark into a .pcap file,  you could create a .tgf file with graph information ready to be plot.
 1-Open a shell and move to the tp1 directory. 
 2- Run the following command 'python tgfpcap.py pcapfile > outputfile.tgf count' where 'pcapfile'' stands for the pcap file you want to operate with and 'outputfile' refers to the file you want to save the output to. If count is positive the the first 'count' packages will be read. A negative 'count' will read all packages. Programs like Yed are able to open and operate with .tgf files. 
+
+## graph.py
+Uses Graphviz `.dot` file format to draw a graph from an ARP only `.pcap` file.
+
+The following options are available:
+
+* `-f` or `--file` is the path to the `.pcap` file.
+* `-o` or `--output` is the path to the output `.dot` file.
+* `-c` or `--count` use the first `count` packets in the capture file only.
+* `-w` or `--weight` draws an edge if there was at least `weight` ARP requests between two nodes.
+* `--ip` to see the activity for that `ip` only.
+
+Example:
+
+```bash
+$ ./tp1/graph.py -f path/to/file.pcap -o "tmp/out.dot" -c 10000 -w 100 -ip "192.168.0.1"
+```
+
