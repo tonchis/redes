@@ -32,4 +32,4 @@ Once the filter is applied, you have to export (not `save as`) by going to `File
 TGF stands for Trivial Graphf Format and is a simple plain text format for describing graphs.
 Once exported functional data from Wireshark into a .pcap file,  you could create a .tgf file with graph information ready to be plot.
 1-Open a shell and move to the tp1 directory. 
-2- Run the following command 'python tgfpcap.py pcapfile > outputfile.tgf' where 'pcapfile'' stands for the pcap file you want to operate with and 'outputfile' refers to the file you want to save the output to. Programs like Yed are able to open and operate with .tgf files. 
+2- Run the following command 'python tgfpcap.py pcapfile > outputfile.tgf count' where 'pcapfile'' stands for the pcap file you want to operate with and 'outputfile' refers to the file you want to save the output to. If count is positive the the first 'count' packages will be read. A negative 'count' will read all packages. Programs like Yed are able to open and operate with .tgf files. 
