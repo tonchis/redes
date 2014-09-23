@@ -2,4 +2,4 @@ tmp/
 *.pyc
 *.log
 *.aux
-tp1/informe/informe.pdf
+tp1/informe/*.pdf
