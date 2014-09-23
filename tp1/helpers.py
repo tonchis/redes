@@ -75,3 +75,12 @@ def map_reduce_entropy(frequencies):
 
     return reduce(add, map(weighted_information, frequencies))
 
+# Prints a 2 by n matrix, with n the length of the sample (both dst and src ips)
+def arp_print(sample):
+    print "src\t\tdst"
+    for i in range(len(sample.src)):
+        print sample.src[i] + "\t" + sample.dst[i]
+
+def dict_to_matrix(dict):
+    for i in dict.keys():
+        print i + "\t" + str(dict[i])
