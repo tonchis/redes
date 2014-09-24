@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 if len(sys.argv)<1:
-	sys.exit("python tgfpcap.py path/to/pcapfile numberofpackagestoread apariciones")
+	sys.exit("python tgfpcap.py path/to/pcapfile number_of_packages_to_read 0=src/1=dst min_apariciones title")
 
 src = list()
 dst = list()
@@ -44,7 +44,7 @@ ax.set_xticks(pos + (width / 2))
 ax.set_xticklabels(ips, rotation=90, size=7.75)
 
 plt.bar(pos, count, width, color='r')
-plt.title("TITULO - IPs "+ label+ " -  Mas de " +str(int(sys.argv[4])) + " apariciones")
+plt.title(str(sys.argv[5]) + " - IPs "+ label+ " -  Mas de " +str(int(sys.argv[4])) + " apariciones")
 plt.ylabel('Frecuencia')
 plt.show()
 
