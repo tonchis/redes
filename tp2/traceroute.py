@@ -3,6 +3,8 @@
 import scapy.all
 import logging
 import optparse
+import requests # pip install requests
+import re
 
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
@@ -31,3 +33,14 @@ for ttl in range(1, options.max_ttl + 1):
 
 print routers
 
+def is_local_network(ip):
+    return re.compile("192\.168").match(ip) != None
+
+def geolocate(ip):
+    if is_local_network(ip):
+        return "Local Network"
+
+    req = requests.get("http://api.hostip.info/get_json.php?ip={ip}&position=true".format(**locals()))
+    return req.json()
+
+print map(geolocate, routers)
