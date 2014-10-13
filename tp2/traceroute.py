@@ -34,7 +34,7 @@ for ttl in range(1, options.max_ttl + 1):
 print routers
 
 def is_local_network(ip):
-    return re.compile("192\.168").match(ip) != None
+    return re.compile("^192\.168").match(ip) != None
 
 def geolocate(ip):
     if is_local_network(ip):
