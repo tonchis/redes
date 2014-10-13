@@ -18,6 +18,7 @@ options, reminder = option_parser.parse_args()
 
 ECHO_REPLY = 0
 TIME_EXCEEDED = 11
+GEOLOCATION_ENDPOINT = "http://api.hostip.info/get_json.php"
 
 routers = []
 for ttl in range(1, options.max_ttl + 1):
@@ -40,7 +41,7 @@ def geolocate(ip):
     if is_local_network(ip):
         return "Local Network"
 
-    req = requests.get("http://api.hostip.info/get_json.php?ip={ip}&position=true".format(**locals()))
-    return req.json()
+    res = requests.get(GEOLOCATION_ENDPOINT, params={"ip": ip, "position": "true"})
+    return res.json()
 
 print map(geolocate, routers)
