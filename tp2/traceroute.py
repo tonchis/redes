@@ -1,40 +1,33 @@
 #!/usr/bin/env python
 
-import sys
-import time
-from scapy.all import *
+import scapy.all
+import logging
+import optparse
+
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
+
+option_parser = optparse.OptionParser()
+option_parser.add_option("-m", "--max-ttl", dest="max_ttl", default="64", type="int")
+option_parser.add_option("-u", "--url", dest="url", default="www.google.com")
+option_parser.add_option("-t", "--tiemout", dest="timeout", default="1", type="int")
+option_parser.add_option("-v", "--verbose", dest="verbose", default="0", type="int")
+
+options, reminder = option_parser.parse_args()
 
 ECHO_REPLY = 0
 TIME_EXCEEDED = 11
 
-def ping(dest, ttl):
-	packet = IP(dst=dest, ttl=ttl) / ICMP()
-	itime = time.time()
-	#sr1 is like sr except it returns the first answer
-	return (sr1(packet, timeout=1, verbose=0), time.time()-itime)
+routers = []
+for ttl in range(1, options.max_ttl + 1):
+    print "TTL: %s" % ttl
+    res = scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
+    if res:
+        icmp_response = res.getlayer(scapy.layers.inet.ICMP)
+        if icmp_response.type == ECHO_REPLY:
+            routers.append(icmp_response.src)
+            break
+        elif icmp_response.type == TIME_EXCEEDED:
+            routers.append(icmp_response.src)
 
-def traceroute(dest, limit=100):
-	ttl = 1
-	responses = []
-	done = False
-	while ttl<=limit and not done :
-		ip = '(unknown)'
-		tipo = 'notype'
-		(response, rtt) = ping(dest, ttl)
-		if response:
-			if response.type == ECHO_REPLY:
-				ip = response.src
-				done = True	
-			if response.type == TIME_EXCEEDED:
-				ip = response.src
-		else:
-			ip = '(no response)'
-		responses.append((ip,rtt))	
-		ttl = ttl+1
-	return responses	 	
+print routers
 
-if __name__ == '__main__':
-    
-    responses = traceroute(sys.argv[1],int(sys.argv[2]))
-    for (ip, rtt) in responses:
-    	print(srt(ip)+"-"+str(rtt))
