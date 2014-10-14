@@ -25,12 +25,15 @@ for ttl in range(1, options.max_ttl + 1):
     print "TTL:", ttl
     icmp_res = scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
     if icmp_res:
-        #icmp_res = res.getlayer(scapy.layers.inet.ICMP)
+        src = icmp_res.src
+        print "  from", src
         if icmp_res.type == ECHO_REPLY:
-            routers.append(icmp_res.src)
+            routers.append(src)
             break
         elif icmp_res.type == TIME_EXCEEDED:
-            routers.append(icmp_res.src)
+            routers.append(src)
+    else:
+        print "  no answer"
 
 print routers
 
