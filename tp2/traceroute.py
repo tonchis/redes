@@ -23,14 +23,17 @@ GEOLOCATION_ENDPOINT = "http://api.hostip.info/get_json.php"
 routers = []
 for ttl in range(1, options.max_ttl + 1):
     print "TTL:", ttl
-    icmp_res = scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
-    if icmp_res:
-        src = icmp_res.src
+    res = scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
+    if res:
+        icmp = res.getlayer(scapy.layers.inet.ICMP)
+        ip = res.getlayer(scapy.layers.inet.IP)
+
+        src = ip.src
         print "  from", src
-        if icmp_res.type == ECHO_REPLY:
+        if icmp.type == ECHO_REPLY:
             routers.append(src)
             break
-        elif icmp_res.type == TIME_EXCEEDED:
+        elif icmp.type == TIME_EXCEEDED:
             routers.append(src)
     else:
         print "  no answer"
