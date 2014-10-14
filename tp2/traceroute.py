@@ -23,9 +23,9 @@ GEOLOCATION_ENDPOINT = "http://api.hostip.info/get_json.php"
 routers = []
 for ttl in range(1, options.max_ttl + 1):
     print "TTL:", ttl
-    res = scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
-    if res:
-        icmp_res = res.getlayer(scapy.layers.inet.ICMP)
+    icmp_res = scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
+    if icmp_res:
+        #icmp_res = res.getlayer(scapy.layers.inet.ICMP)
         if icmp_res.type == ECHO_REPLY:
             routers.append(icmp_res.src)
             break
