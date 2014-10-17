@@ -7,6 +7,7 @@ import requests # pip install requests
 import re
 import time
 import collections
+import datetime
 
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
@@ -30,8 +31,11 @@ GEOLOCATION_ENDPOINT = "http://api.hostip.info/get_json.php"
 routers = Router(ips=[], rtt=[])
 for ttl in range(1, options.max_ttl + 1):
     print "TTL:", ttl
-    itime = time.time()    
+    itime = time.time()
+    start_time = datetime.datetime.now()
     (res, rtt) = (scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose), time.time()-itime)
+    end_time = datetime.datetime.now()
+    time_diff = (end_time - start_time).total_seconds()
     if res:
         icmp = res.getlayer(scapy.layers.inet.ICMP)
         ip = res.getlayer(scapy.layers.inet.IP)
