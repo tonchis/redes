@@ -16,6 +16,7 @@ option_parser.add_option("-u", "--url", dest="url", default="www.google.com")
 option_parser.add_option("-t", "--tiemout", dest="timeout", default="1", type="int")
 option_parser.add_option("-v", "--verbose", dest="verbose", default="0", type="int")
 option_parser.add_option("-g", "--geolocation", dest="geolocation", default="1", type="int")
+option_parser.add_option("-T", "--times", dest="times", default="3", type="int")
 
 options, reminder = option_parser.parse_args()
 
@@ -40,7 +41,15 @@ for ttl in range(1, options.max_ttl + 1):
     def sr1():
         return scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
 
-    (res, rtt) = measure_rtt(sr1)
+    rtts = []
+    for t in range(1, options.times):
+        (res, rtt) = measure_rtt(sr1)
+        rtts.append((res, rtt))
+
+    def add(x, y):
+        return x + y
+
+    avg_rtt = reduce(add, map(lambda pair: pair[1], rtts)) / options.times
 
     if res:
         icmp = res.getlayer(scapy.layers.inet.ICMP)
@@ -49,11 +58,11 @@ for ttl in range(1, options.max_ttl + 1):
         print "  from", src
         if icmp.type == ECHO_REPLY:
             routers.ips.append(src)
-            routers.rtt.append(rtt)
+            routers.rtt.append(avg_rtt)
             break
         elif icmp.type == TIME_EXCEEDED:
             routers.ips.append(src)
-            routers.rtt.append(rtt)
+            routers.rtt.append(avg_rtt)
         #maybe we should take into consideration the icmp packages with other types. just sayin'
     else:
         print "  no answer"
@@ -73,3 +82,4 @@ def geolocate(ip):
 
 if(options.geolocation == 1):
     print map(geolocate, routers.ips)
+
