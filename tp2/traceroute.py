@@ -7,6 +7,8 @@ import requests # pip install requests
 import re
 import time
 import collections
+import numpy #pip install numpy
+import math
 
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
@@ -42,15 +44,15 @@ for ttl in range(1, options.max_ttl + 1):
         return scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
 
     rtts = []
-    for t in range(1, options.times):
+    for t in range(1, options.times + 1):
         (res, rtt) = measure_rtt(sr1)
         rtts.append((res, rtt))
 
     def add(x, y):
         return x + y
 
-    avg_rtt = reduce(add, map(lambda pair: pair[1], rtts)) / options.times
-
+    avg_rtt_i = numpy.mean(map(lambda pair: pair[1], rtts))
+    
     if res:
         icmp = res.getlayer(scapy.layers.inet.ICMP)
         ip = res.getlayer(scapy.layers.inet.IP)
@@ -58,17 +60,25 @@ for ttl in range(1, options.max_ttl + 1):
         print "  from", src
         if icmp.type == ECHO_REPLY:
             routers.ips.append(src)
-            routers.rtt.append(avg_rtt)
+            routers.rtt.append(avg_rtt_i)
             break
         elif icmp.type == TIME_EXCEEDED:
             routers.ips.append(src)
-            routers.rtt.append(avg_rtt)
+            routers.rtt.append(avg_rtt_i)
         #maybe we should take into consideration the icmp packages with other types. just sayin'
     else:
         print "  no answer"
 
+avg_rtt = numpy.mean(routers.rtt)
+print "avg_rtt =", avg_rtt
+
+standard_deviation_rtt = numpy.std(routers.rtt)
+print "standard_deviation_rtt =", standard_deviation_rtt
 print routers.ips
 print routers.rtt
+
+def add(x, y):
+        return x + y
 
 def is_local_network(ip):
     return re.compile("^192\.168").match(ip) != None
@@ -83,3 +93,13 @@ def geolocate(ip):
 if(options.geolocation == 1):
     print map(geolocate, routers.ips)
 
+
+rtt_is = []
+for i in range(2, len(routers.rtt)):
+     rtt_is.append(routers.rtt[i]-routers.rtt[i-1])
+
+def zrtt_i(array):
+    return map(lambda rtt_i: (rtt_i - avg_rtt)/standard_deviation_rtt, array)
+
+
+print zrtt_i(rtt_is)
