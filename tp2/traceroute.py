@@ -38,7 +38,7 @@ for ttl in range(1, options.max_ttl + 1):
     print "TTL:", ttl
 
     def sr1():
-        scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
+        return scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
 
     (res, rtt) = measure_rtt(sr1)
 
