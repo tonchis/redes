@@ -27,11 +27,21 @@ ECHO_REPLY = 0
 TIME_EXCEEDED = 11
 GEOLOCATION_ENDPOINT = "http://api.hostip.info/get_json.php"
 
+def measure_rtt(block):
+    start = time.time()
+    result = block()
+    end = time.time()
+    return (result, end - start)
+
 routers = Router(ips=[], rtt=[])
 for ttl in range(1, options.max_ttl + 1):
     print "TTL:", ttl
-    itime = time.time()    
-    (res, rtt) = (scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose), time.time()-itime)
+
+    def sr1():
+        scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
+
+    (res, rtt) = measure_rtt(sr1)
+
     if res:
         icmp = res.getlayer(scapy.layers.inet.ICMP)
         ip = res.getlayer(scapy.layers.inet.IP)
@@ -44,7 +54,7 @@ for ttl in range(1, options.max_ttl + 1):
         elif icmp.type == TIME_EXCEEDED:
             routers.ips.append(src)
             routers.rtt.append(rtt)
-        #maybe we should take into consideration the icmp packages with other types. just sayin' 
+        #maybe we should take into consideration the icmp packages with other types. just sayin'
     else:
         print "  no answer"
 
@@ -61,5 +71,5 @@ def geolocate(ip):
     res = requests.get(GEOLOCATION_ENDPOINT, params={"ip": ip, "position": "true"})
     return res.json()
 
-if(options.geolocation == 1):	
-	print map(geolocate, routers.ips)
+if(options.geolocation == 1):
+    print map(geolocate, routers.ips)
