@@ -17,7 +17,7 @@ option_parser.add_option("-m", "--max-ttl", dest="max_ttl", default="64", type="
 option_parser.add_option("-u", "--url", dest="url", default="www.google.com")
 option_parser.add_option("-t", "--tiemout", dest="timeout", default="1", type="int")
 option_parser.add_option("-v", "--verbose", dest="verbose", default="0", type="int")
-option_parser.add_option("-g", "--geolocation", dest="geolocation", default="1", type="int")
+option_parser.add_option("-g", "--geolocation", dest="geolocation", default="0", type="int")
 option_parser.add_option("-T", "--times", dest="times", default="3", type="int")
 
 options, reminder = option_parser.parse_args()
@@ -48,11 +48,8 @@ for ttl in range(1, options.max_ttl + 1):
         (res, rtt) = measure_rtt(sr1)
         rtts.append((res, rtt))
 
-    def add(x, y):
-        return x + y
-
     avg_rtt_i = numpy.mean(map(lambda pair: pair[1], rtts))
-    
+
     if res:
         icmp = res.getlayer(scapy.layers.inet.ICMP)
         ip = res.getlayer(scapy.layers.inet.IP)
@@ -65,9 +62,10 @@ for ttl in range(1, options.max_ttl + 1):
         elif icmp.type == TIME_EXCEEDED:
             routers.ips.append(src)
             routers.rtt.append(avg_rtt_i)
-        #maybe we should take into consideration the icmp packages with other types. just sayin'
     else:
         print "  no answer"
+
+    print "  rtt_i:", avg_rtt_i
 
 avg_rtt = numpy.mean(routers.rtt)
 print "avg_rtt =", avg_rtt
@@ -88,9 +86,14 @@ def geolocate(ip):
         return "Local Network"
 
     res = requests.get(GEOLOCATION_ENDPOINT, params={"ip": ip, "position": "true"})
-    return res.json()
+    json = res.json()
 
-if(options.geolocation == 1):
+    if json["country_code"] == "XX":
+        return "Couldn't geolocate ip %ip%".format(**locals())
+
+    return { "country": json["country_name"], "city": json["city"], "position": {"latitude": json["lat"], "longitude": json["lng"]} }
+
+if options.geolocation == 1:
     print map(geolocate, routers.ips)
 
 
@@ -100,6 +103,5 @@ for i in range(2, len(routers.rtt)):
 
 def zrtt_i(array):
     return map(lambda rtt_i: (rtt_i - avg_rtt)/standard_deviation_rtt, array)
-
 
 print zrtt_i(rtt_is)
