@@ -59,7 +59,7 @@ for ttl in range(1, options.max_ttl + 1):
     rtts = []
     for t in range(1, options.times + 1):
         (res, rtt) = measure_rtt(sr1)
-        rtts.append((res, rtt))
+        rtts.append((res, rtt*1000))
 
     def add(x, y):
         return x + y
