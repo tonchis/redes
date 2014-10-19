@@ -39,10 +39,10 @@ def measure_rtt(block):
 def round_2(n):
     return "%.2f" % round(n, 2)
 
-def print_with_two_decimals(ary):
-    print map(lambda item: round_2(item), ary)
+def map_with_two_decimals(ary):
+    return map(lambda item: round_2(item), ary)
 
-def zrtt_i(array):
+def z_score(array):
     return map(lambda rtt_i: (rtt_i - avg_rtt) / standard_deviation_rtt, array)
 
 def is_local_network(ip):
@@ -111,7 +111,7 @@ print "avg_rtt:", round_2(avg_rtt)
 standard_deviation_rtt = numpy.std(routers.rtt)
 print "standard_deviation_rtt:", round_2(standard_deviation_rtt)
 
-print_with_two_decimals(zrtt_i(normalize_rtt_i(routers.rtt)))
+print "zscore: ", map_with_two_decimals(z_score(normalize_rtt_i(routers.rtt)))
 
 if options.geolocation == 1:
     print routers.ips
