@@ -36,6 +36,30 @@ def measure_rtt(block):
     end = time.time()
     return (result, end - start)
 
+def round_2(n):
+    return "%.2f" % round(2, n)
+
+def print_with_two_decimals(ary):
+    print map(lambda item: round_2(item), ary)
+
+def zrtt_i(array):
+    return map(lambda rtt_i: (rtt_i - avg_rtt) / standard_deviation_rtt, array)
+
+def is_local_network(ip):
+    return re.compile("^192\.168").match(ip) != None
+
+def geolocate(ip):
+    if is_local_network(ip):
+        return "Local Network"
+
+    res = requests.get(GEOLOCATION_ENDPOINT, params={"ip": ip, "position": "true"})
+    json = res.json()
+
+    if json["country_code"] == "XX":
+        return "Couldn't geolocate ip {ip}".format(**locals())
+
+    return { "country": json["country_name"], "city": json["city"], "position": {"latitude": json["lat"], "longitude": json["lng"]} }
+
 routers = Router(ips=[], rtt=[])
 for ttl in range(1, options.max_ttl + 1):
     print "TTL:", ttl
@@ -67,33 +91,15 @@ for ttl in range(1, options.max_ttl + 1):
     else:
         print "  no answer"
 
-    print "  rtt_i:", avg_rtt_i
+    print "  rtt_i:", round_2(avg_rtt_i)
 
 avg_rtt = numpy.mean(routers.rtt)
-print "avg_rtt =", avg_rtt
+print "avg_rtt =", round_2(avg_rtt)
 
 standard_deviation_rtt = numpy.std(routers.rtt)
-print "standard_deviation_rtt =", standard_deviation_rtt
+print "standard_deviation_rtt =", round_2(standard_deviation_rtt)
 print routers.ips
 print_with_two_decimals(routers.rtt)
-
-def is_local_network(ip):
-    return re.compile("^192\.168").match(ip) != None
-
-def geolocate(ip):
-    if is_local_network(ip):
-        return "Local Network"
-
-    res = requests.get(GEOLOCATION_ENDPOINT, params={"ip": ip, "position": "true"})
-    json = res.json()
-
-    if json["country_code"] == "XX":
-        return "Couldn't geolocate ip {ip}".format(**locals())
-
-    return { "country": json["country_name"], "city": json["city"], "position": {"latitude": json["lat"], "longitude": json["lng"]} }
-
-def print_with_two_decimals(ary):
-    print map(lambda item: "%.2f" % round(2, item), ary)
 
 if options.geolocation == 1:
     print map(geolocate, routers.ips)
@@ -101,8 +107,5 @@ if options.geolocation == 1:
 rtt_is = []
 for i in range(2, len(routers.rtt)):
      rtt_is.append(routers.rtt[i] - routers.rtt[i - 1])
-
-def zrtt_i(array):
-    return map(lambda rtt_i: (rtt_i - avg_rtt) / standard_deviation_rtt, array)
 
 print_with_two_decimals(zrtt_i(rtt_is))
