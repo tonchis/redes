@@ -49,6 +49,9 @@ def is_local_network(ip):
     return re.compile("^192\.168").match(ip) != None
 
 def geolocate(ip):
+    if ip == None:
+        return "No answer"
+
     if is_local_network(ip):
         return "Local Network"
 
@@ -94,6 +97,7 @@ for ttl in range(1, options.max_ttl + 1):
         print "  no answer"
         routers.ips.append(None)
         routers.rtt.append(avg_rtt_i)
+        print "  rtt_i:", round_2(avg_rtt_i)
 
 avg_rtt = numpy.mean(routers.rtt)
 print "avg_rtt =", round_2(avg_rtt)
