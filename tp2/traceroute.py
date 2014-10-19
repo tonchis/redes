@@ -9,6 +9,8 @@ import time
 import collections
 import numpy #pip install numpy
 import math
+import pprint
+from helpers import *
 
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
@@ -19,6 +21,7 @@ option_parser.add_option("-t", "--tiemout", dest="timeout", default="1", type="i
 option_parser.add_option("-v", "--verbose", dest="verbose", default="0", type="int")
 option_parser.add_option("-g", "--geolocation", dest="geolocation", default="1", type="int")
 option_parser.add_option("-T", "--times", dest="times", default="3", type="int")
+option_parser.add_option("-p", "--puts", dest="puts", default="0", type="int")
 
 options, reminder = option_parser.parse_args()
 
@@ -74,32 +77,15 @@ print "avg_rtt =", avg_rtt
 
 standard_deviation_rtt = numpy.std(routers.rtt)
 print "standard_deviation_rtt =", standard_deviation_rtt
-print routers.ips
-print routers.rtt
+puts(routers.ips)
+puts(routers.rtt)
 
-def add(x, y):
-        return x + y
-
-def is_local_network(ip):
-    return re.compile("^192\.168").match(ip) != None
-
-def geolocate(ip):
-    if is_local_network(ip):
-        return "Local Network"
-
-    res = requests.get(GEOLOCATION_ENDPOINT, params={"ip": ip, "position": "true"})
-    return res.json()
 
 if(options.geolocation == 1):
-    print map(geolocate, routers.ips)
-
+    puts(map(geolocate, routers.ips))
 
 rtt_is = []
 for i in range(2, len(routers.rtt)):
      rtt_is.append(routers.rtt[i]-routers.rtt[i-1])
 
-def zrtt_i(array):
-    return map(lambda rtt_i: (rtt_i - avg_rtt)/standard_deviation_rtt, array)
-
-
-print zrtt_i(rtt_is)
+print "ZRTT_i =", zrtt_i(rtt_is)
