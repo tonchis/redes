@@ -63,6 +63,10 @@ def geolocate(ip):
 
     return { "country": json["country_name"], "city": json["city"], "position": {"latitude": json["lat"], "longitude": json["lng"]} }
 
+def store(routers, src, rtt_i):
+    routers.ips.append(src)
+    routers.rtt.append(rtt_i)
+
 routers = Router(ips=[], rtt=[])
 for ttl in range(1, options.max_ttl + 1):
     print "TTL:", ttl
@@ -76,6 +80,7 @@ for ttl in range(1, options.max_ttl + 1):
         rtts.append((res, rtt))
 
     avg_rtt_i = numpy.mean(map(lambda pair: pair[1], rtts))
+    print "  rtt_i:", round_2(rtt_i)
 
     if res:
         icmp = res.getlayer(scapy.layers.inet.ICMP)
@@ -84,26 +89,20 @@ for ttl in range(1, options.max_ttl + 1):
         print "  from", src
         if icmp.type == ECHO_REPLY:
             print "  ECHO REPLY"
-            routers.ips.append(src)
-            routers.rtt.append(avg_rtt_i)
-            print "  rtt_i:", round_2(avg_rtt_i)
+            store(routers, src, avg_rtt_i)
             break
         elif icmp.type == TIME_EXCEEDED:
             print "  TIME EXCEEDED"
-            routers.ips.append(src)
-            routers.rtt.append(avg_rtt_i)
-            print "  rtt_i:", round_2(avg_rtt_i)
+            store(routers, src, avg_rtt_i)
     else:
         print "  no answer"
-        routers.ips.append(None)
-        routers.rtt.append(avg_rtt_i)
-        print "  rtt_i:", round_2(avg_rtt_i)
+        store(routers, None, avg_rtt_i)
 
 avg_rtt = numpy.mean(routers.rtt)
-print "avg_rtt =", round_2(avg_rtt)
+print "avg_rtt:", round_2(avg_rtt)
 
 standard_deviation_rtt = numpy.std(routers.rtt)
-print "standard_deviation_rtt =", round_2(standard_deviation_rtt)
+print "standard_deviation_rtt:", round_2(standard_deviation_rtt)
 print routers.ips
 print_with_two_decimals(routers.rtt)
 
