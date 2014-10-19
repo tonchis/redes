@@ -22,6 +22,7 @@ option_parser.add_option("-v", "--verbose", dest="verbose", default="0", type="i
 option_parser.add_option("-g", "--geolocation", dest="geolocation", default="1", type="int")
 option_parser.add_option("-T", "--times", dest="times", default="3", type="int")
 option_parser.add_option("-p", "--puts", dest="puts", default="0", type="int")
+option_parser.add_option("-U", "--university", dest="university")
 
 options, reminder = option_parser.parse_args()
 
@@ -44,7 +45,16 @@ for ttl in range(1, options.max_ttl + 1):
     print "TTL:", ttl
 
     def sr1():
-        return scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
+        if options.university == "tokyo":
+            return scapy.sendrecv.sr1(scapy.layers.inet.IP(dst="www.u-tokyo.ac.jp", ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
+        elif options.university == "auckland":
+            return scapy.sendrecv.sr1(scapy.layers.inet.IP(dst="www.auckland.ac.nz", ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
+        elif options.university == "oxford":
+            return scapy.sendrecv.sr1(scapy.layers.inet.IP(dst="www.ox.ac.uk", ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
+        elif options.university == "uba":
+            return scapy.sendrecv.sr1(scapy.layers.inet.IP(dst="www.dc.uba.ar", ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
+        else:
+            return scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
 
     rtts = []
     for t in range(1, options.times + 1):
@@ -88,4 +98,4 @@ rtt_is = []
 for i in range(2, len(routers.rtt)):
      rtt_is.append(routers.rtt[i]-routers.rtt[i-1])
 
-print "ZRTT_i =", zrtt_i(rtt_is, avg_rtt, standard_deviation_rtt)
+puts(zrtt_i(rtt_is, avg_rtt, standard_deviation_rtt), "ZRTT_i", options.puts)
