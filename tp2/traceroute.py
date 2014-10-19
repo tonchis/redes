@@ -37,7 +37,7 @@ def measure_rtt(block):
     return (result, end - start)
 
 def round_2(n):
-    return "%.2f" % round(2, n)
+    return "%.2f" % round(n, 2)
 
 def print_with_two_decimals(ary):
     print map(lambda item: round_2(item), ary)
