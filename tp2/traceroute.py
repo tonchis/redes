@@ -88,7 +88,7 @@ def geolocate(ip):
     json = res.json()
 
     if json["country_code"] == "XX":
-        return "Couldn't geolocate ip %ip%".format(**locals())
+        return "Couldn't geolocate ip {ip}".format(**locals())
 
     return { "country": json["country_name"], "city": json["city"], "position": {"latitude": json["lat"], "longitude": json["lng"]} }
 
