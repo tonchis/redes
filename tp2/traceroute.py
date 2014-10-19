@@ -17,7 +17,7 @@ option_parser.add_option("-m", "--max-ttl", dest="max_ttl", default="64", type="
 option_parser.add_option("-u", "--url", dest="url", default="www.google.com")
 option_parser.add_option("-t", "--tiemout", dest="timeout", default="1", type="int")
 option_parser.add_option("-v", "--verbose", dest="verbose", default="0", type="int")
-option_parser.add_option("-g", "--geolocation", dest="geolocation", default="0", type="int")
+option_parser.add_option("-g", "--geolocation", dest="geolocation", default="1", type="int")
 option_parser.add_option("-T", "--times", dest="times", default="3", type="int")
 
 options, reminder = option_parser.parse_args()
