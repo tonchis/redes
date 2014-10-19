@@ -67,6 +67,13 @@ def store(routers, src, rtt_i):
     routers.ips.append(src)
     routers.rtt.append(rtt_i)
 
+def normalize_rtt_i(rtts):
+    normalized = [rtts[0]]
+    for i in range(1, len(rtts)):
+        normalized.append(rtts[i] - rtts[i - 1])
+
+    return normalized
+
 routers = Router(ips=[], rtt=[])
 for ttl in range(1, options.max_ttl + 1):
     print "TTL:", ttl
@@ -95,7 +102,7 @@ for ttl in range(1, options.max_ttl + 1):
             print "  TIME EXCEEDED"
             store(routers, src, avg_rtt_i)
     else:
-        print "  no answer"
+        print "  timeout"
         store(routers, None, avg_rtt_i)
 
 avg_rtt = numpy.mean(routers.rtt)
@@ -103,14 +110,10 @@ print "avg_rtt:", round_2(avg_rtt)
 
 standard_deviation_rtt = numpy.std(routers.rtt)
 print "standard_deviation_rtt:", round_2(standard_deviation_rtt)
-print routers.ips
-print_with_two_decimals(routers.rtt)
+
+print_with_two_decimals(zrtt_i(normalize_rtt_i(routers.rtt)))
 
 if options.geolocation == 1:
+    print routers.ips
     print map(geolocate, routers.ips)
 
-rtt_is = []
-for i in range(2, len(routers.rtt)):
-     rtt_is.append(routers.rtt[i] - routers.rtt[i - 1])
-
-print_with_two_decimals(zrtt_i(rtt_is))
