@@ -75,9 +75,6 @@ print "standard_deviation_rtt =", standard_deviation_rtt
 print routers.ips
 print routers.rtt
 
-def add(x, y):
-        return x + y
-
 def is_local_network(ip):
     return re.compile("^192\.168").match(ip) != None
 
@@ -95,7 +92,6 @@ def geolocate(ip):
 
 if options.geolocation == 1:
     print map(geolocate, routers.ips)
-
 
 rtt_is = []
 for i in range(2, len(routers.rtt)):
