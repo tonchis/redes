@@ -80,7 +80,7 @@ for ttl in range(1, options.max_ttl + 1):
         rtts.append((res, rtt))
 
     avg_rtt_i = numpy.mean(map(lambda pair: pair[1], rtts))
-    print "  rtt_i:", round_2(rtt_i)
+    print "  rtt_i:", round_2(avg_rtt_i)
 
     if res:
         icmp = res.getlayer(scapy.layers.inet.ICMP)
