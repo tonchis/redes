@@ -1,6 +1,8 @@
 import requests
 import re
 
+GEOLOCATION_ENDPOINT = "http://api.hostip.info/get_json.php"
+
 def add(x, y):
         return x + y
 
