@@ -59,12 +59,12 @@ for ttl in range(1, options.max_ttl + 1):
     rtts = []
     for t in range(1, options.times + 1):
         (res, rtt) = measure_rtt(sr1)
-        rtts.append((res, rtt*1000))
+        rtts.append((res, round(rtt*1000, 3)))
 
     def add(x, y):
         return x + y
 
-    avg_rtt_i = numpy.mean(map(lambda pair: pair[1], rtts))
+    avg_rtt_i = round(numpy.mean(map(lambda pair: pair[1], rtts)), 3)
     
     if res:
         icmp = res.getlayer(scapy.layers.inet.ICMP)
@@ -82,10 +82,10 @@ for ttl in range(1, options.max_ttl + 1):
     else:
         print "  no answer"
 
-avg_rtt = numpy.mean(routers.rtt)
+avg_rtt = round(numpy.mean(routers.rtt), 3)
 print "avg_rtt =", avg_rtt
 
-standard_deviation_rtt = numpy.std(routers.rtt)
+standard_deviation_rtt = round(numpy.std(routers.rtt), 3)
 print "standard_deviation_rtt =", standard_deviation_rtt
 puts(routers.ips, "IPs", options.puts)
 puts(routers.rtt, "RTTs", options.puts)

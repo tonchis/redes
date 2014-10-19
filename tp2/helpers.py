@@ -18,7 +18,7 @@ def geolocate(ip):
     return res.json()
 
 def zrtt_i(array, avg_rtt, standard_deviation_rtt):
-    return map(lambda rtt_i: (rtt_i - avg_rtt)/standard_deviation_rtt, array)
+    return map(lambda rtt_i: round((rtt_i - avg_rtt)/standard_deviation_rtt, 3), array)
 
 def puts(data, name, print_type):
     if print_type == 1:
