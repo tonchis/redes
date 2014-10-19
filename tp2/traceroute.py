@@ -56,10 +56,12 @@ for ttl in range(1, options.max_ttl + 1):
         src = ip.src
         print "  from", src
         if icmp.type == ECHO_REPLY:
+            print "  ECHO REPLY"
             routers.ips.append(src)
             routers.rtt.append(avg_rtt_i)
             break
         elif icmp.type == TIME_EXCEEDED:
+            print "  TIME EXCEEDED"
             routers.ips.append(src)
             routers.rtt.append(avg_rtt_i)
     else:
