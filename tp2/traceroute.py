@@ -88,4 +88,4 @@ rtt_is = []
 for i in range(2, len(routers.rtt)):
      rtt_is.append(routers.rtt[i]-routers.rtt[i-1])
 
-print "ZRTT_i =", zrtt_i(rtt_is)
+print "ZRTT_i =", zrtt_i(rtt_is, avg_rtt, standard_deviation_rtt)

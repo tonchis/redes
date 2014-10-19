@@ -16,7 +16,7 @@ def geolocate(ip):
     res = requests.get(GEOLOCATION_ENDPOINT, params={"ip": ip, "position": "true"})
     return res.json()
 
-def zrtt_i(array):
+def zrtt_i(array, avg_rtt, standard_deviation_rtt):
     return map(lambda rtt_i: (rtt_i - avg_rtt)/standard_deviation_rtt, array)
 
 def puts(data, name, print_type):
