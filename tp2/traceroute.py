@@ -83,15 +83,17 @@ for ttl in range(1, options.max_ttl + 1):
             print "  ECHO REPLY"
             routers.ips.append(src)
             routers.rtt.append(avg_rtt_i)
+            print "  rtt_i:", round_2(avg_rtt_i)
             break
         elif icmp.type == TIME_EXCEEDED:
             print "  TIME EXCEEDED"
             routers.ips.append(src)
             routers.rtt.append(avg_rtt_i)
+            print "  rtt_i:", round_2(avg_rtt_i)
     else:
         print "  no answer"
-
-    print "  rtt_i:", round_2(avg_rtt_i)
+        routers.ips.append(None)
+        routers.rtt.append(avg_rtt_i)
 
 avg_rtt = numpy.mean(routers.rtt)
 print "avg_rtt =", round_2(avg_rtt)
