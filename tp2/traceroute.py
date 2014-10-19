@@ -99,9 +99,9 @@ if options.geolocation == 1:
 
 rtt_is = []
 for i in range(2, len(routers.rtt)):
-     rtt_is.append(routers.rtt[i]-routers.rtt[i-1])
+     rtt_is.append(routers.rtt[i] - routers.rtt[i - 1])
 
 def zrtt_i(array):
-    return map(lambda rtt_i: (rtt_i - avg_rtt)/standard_deviation_rtt, array)
+    return map(lambda rtt_i: (rtt_i - avg_rtt) / standard_deviation_rtt, array)
 
 print zrtt_i(rtt_is)
