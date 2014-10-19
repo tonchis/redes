@@ -14,8 +14,8 @@ def geolocate(ip):
 def zrtt_i(array):
     return map(lambda rtt_i: (rtt_i - avg_rtt)/standard_deviation_rtt, array)
 
-def puts(data, options, name=""):
-    if options.puts == 0:
+def puts(data, name, print_type):
+    if print_type == 1:
         print name
         print " = "
         pprint.pprint(data)

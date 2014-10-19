@@ -77,12 +77,12 @@ print "avg_rtt =", avg_rtt
 
 standard_deviation_rtt = numpy.std(routers.rtt)
 print "standard_deviation_rtt =", standard_deviation_rtt
-puts(routers.ips, "IPs")
-puts(routers.rtt, "RTTs")
+puts(routers.ips, "IPs", options.puts)
+puts(routers.rtt, "RTTs", options.puts)
 
 
 if(options.geolocation == 1):
-    puts(map(geolocate, routers.ips), "Geolocation")
+    puts(map(geolocate, routers.ips), "Geolocation", options.puts)
 
 rtt_is = []
 for i in range(2, len(routers.rtt)):
