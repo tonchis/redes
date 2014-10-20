@@ -9,6 +9,8 @@ import time
 import collections
 import numpy #pip install numpy
 import math
+import pprint
+from helpers import *
 
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
@@ -19,6 +21,8 @@ option_parser.add_option("-t", "--tiemout", dest="timeout", default="1", type="i
 option_parser.add_option("-v", "--verbose", dest="verbose", default="0", type="int")
 option_parser.add_option("-g", "--geolocation", dest="geolocation", default="1", type="int")
 option_parser.add_option("-T", "--times", dest="times", default="3", type="int")
+option_parser.add_option("-p", "--puts", dest="puts", default="0", type="int")
+option_parser.add_option("-U", "--university", dest="university")
 
 options, reminder = option_parser.parse_args()
 
@@ -28,7 +32,6 @@ Router = collections.namedtuple("Router", ["ips", "rtt"])
 
 ECHO_REPLY = 0
 TIME_EXCEEDED = 11
-GEOLOCATION_ENDPOINT = "http://api.hostip.info/get_json.php"
 
 def measure_rtt(block):
     start = time.time()
@@ -36,36 +39,11 @@ def measure_rtt(block):
     end = time.time()
     return (result, end - start)
 
-def round_2(n):
-    return "%.2f" % round(n, 2)
-
-def map_with_two_decimals(ary):
-    return map(lambda item: round_2(item), ary)
+def zrtt_i(array):
+    return map(lambda rtt_i: round((rtt_i - avg_rtt)/standard_deviation_rtt, 3), array)
 
 def z_score(array):
     return map(lambda rtt_i: (rtt_i - avg_rtt) / standard_deviation_rtt, array)
-
-def is_local_network(ip):
-    return re.compile("^192\.168").match(ip) != None
-
-def geolocate(ip):
-    if ip == None:
-        return "No answer"
-
-    if is_local_network(ip):
-        return "Local Network"
-
-    res = requests.get(GEOLOCATION_ENDPOINT, params={"ip": ip, "position": "true"})
-    json = res.json()
-
-    if json["country_code"] == "XX":
-        return "Couldn't geolocate ip {ip}".format(**locals())
-
-    return { "country": json["country_name"], "city": json["city"], "position": {"latitude": json["lat"], "longitude": json["lng"]} }
-
-def store(routers, src, rtt_i):
-    routers.ips.append(src)
-    routers.rtt.append(rtt_i)
 
 def normalize_rtt_i(rtts):
     normalized = [rtts[0]]
@@ -79,15 +57,24 @@ for ttl in range(1, options.max_ttl + 1):
     print "TTL:", ttl
 
     def sr1():
-        return scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
+        if options.university == "tokyo":
+            return scapy.sendrecv.sr1(scapy.layers.inet.IP(dst="www.u-tokyo.ac.jp", ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
+        elif options.university == "auckland":
+            return scapy.sendrecv.sr1(scapy.layers.inet.IP(dst="www.auckland.ac.nz", ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
+        elif options.university == "oxford":
+            return scapy.sendrecv.sr1(scapy.layers.inet.IP(dst="www.ox.ac.uk", ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
+        elif options.university == "uba":
+            return scapy.sendrecv.sr1(scapy.layers.inet.IP(dst="www.dc.uba.ar", ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
+        else:
+            return scapy.sendrecv.sr1(scapy.layers.inet.IP(dst=options.url, ttl=ttl) / scapy.layers.inet.ICMP(), timeout=options.timeout, verbose=options.verbose)
 
     rtts = []
     for t in range(1, options.times + 1):
         (res, rtt) = measure_rtt(sr1)
-        rtts.append((res, rtt))
+        rtts.append((res, round(rtt*1000, 3)))
 
-    avg_rtt_i = numpy.mean(map(lambda pair: pair[1], rtts))
-    print "  rtt_i:", round_2(avg_rtt_i)
+    avg_rtt_i = round(numpy.mean(map(lambda pair: pair[1], rtts)), 3)
+    print "  rtt_i:", avg_rtt_i
 
     if res:
         icmp = res.getlayer(scapy.layers.inet.ICMP)
@@ -105,15 +92,22 @@ for ttl in range(1, options.max_ttl + 1):
         print "  timeout"
         store(routers, None, avg_rtt_i)
 
-avg_rtt = numpy.mean(routers.rtt)
-print "avg_rtt:", round_2(avg_rtt)
+avg_rtt = round(numpy.mean(routers.rtt), 3)
+print "avg_rtt =", avg_rtt
 
-standard_deviation_rtt = numpy.std(routers.rtt)
-print "standard_deviation_rtt:", round_2(standard_deviation_rtt)
+standard_deviation_rtt = round(numpy.std(routers.rtt), 3)
+print "standard_deviation_rtt =", standard_deviation_rtt
 
 print "zscore: ", map_with_two_decimals(z_score(normalize_rtt_i(routers.rtt)))
 
-if options.geolocation == 1:
-    print routers.ips
-    print map(geolocate, routers.ips)
+puts(routers.rtt, "RTTs", options.puts)
 
+if(options.geolocation == 1):
+    puts(routers.ips, "IPs", options.puts)
+    puts(map(geolocate, routers.ips), "Geolocation", options.puts)
+
+rtt_is = []
+for i in range(2, len(routers.rtt)):
+     rtt_is.append(routers.rtt[i]-routers.rtt[i-1])
+
+puts(zrtt_i(rtt_is), "ZRTT_i", options.puts)
