@@ -32,13 +32,25 @@ Router = collections.namedtuple("Router", ["ips", "rtt"])
 
 ECHO_REPLY = 0
 TIME_EXCEEDED = 11
-GEOLOCATION_ENDPOINT = "http://api.hostip.info/get_json.php"
 
 def measure_rtt(block):
     start = time.time()
     result = block()
     end = time.time()
     return (result, end - start)
+
+def zrtt_i(array):
+    return map(lambda rtt_i: round((rtt_i - avg_rtt)/standard_deviation_rtt, 3), array)
+
+def z_score(array):
+    return map(lambda rtt_i: (rtt_i - avg_rtt) / standard_deviation_rtt, array)
+
+def normalize_rtt_i(rtts):
+    normalized = [rtts[0]]
+    for i in range(1, len(rtts)):
+        normalized.append(rtts[i] - rtts[i - 1])
+
+    return normalized
 
 routers = Router(ips=[], rtt=[])
 for ttl in range(1, options.max_ttl + 1):
@@ -61,41 +73,41 @@ for ttl in range(1, options.max_ttl + 1):
         (res, rtt) = measure_rtt(sr1)
         rtts.append((res, round(rtt*1000, 3)))
 
-    def add(x, y):
-        return x + y
-
     avg_rtt_i = round(numpy.mean(map(lambda pair: pair[1], rtts)), 3)
-    
+    print "  rtt_i:", avg_rtt_i
+
     if res:
         icmp = res.getlayer(scapy.layers.inet.ICMP)
         ip = res.getlayer(scapy.layers.inet.IP)
         src = ip.src
         print "  from", src
         if icmp.type == ECHO_REPLY:
-            routers.ips.append(src)
-            routers.rtt.append(avg_rtt_i)
+            print "  ECHO REPLY"
+            store(routers, src, avg_rtt_i)
             break
         elif icmp.type == TIME_EXCEEDED:
-            routers.ips.append(src)
-            routers.rtt.append(avg_rtt_i)
-        #maybe we should take into consideration the icmp packages with other types. just sayin'
+            print "  TIME EXCEEDED"
+            store(routers, src, avg_rtt_i)
     else:
-        print "  no answer"
+        print "  timeout"
+        store(routers, None, avg_rtt_i)
 
 avg_rtt = round(numpy.mean(routers.rtt), 3)
 print "avg_rtt =", avg_rtt
 
 standard_deviation_rtt = round(numpy.std(routers.rtt), 3)
 print "standard_deviation_rtt =", standard_deviation_rtt
-puts(routers.ips, "IPs", options.puts)
+
+print "zscore: ", map_with_two_decimals(z_score(normalize_rtt_i(routers.rtt)))
+
 puts(routers.rtt, "RTTs", options.puts)
 
-
 if(options.geolocation == 1):
+    puts(routers.ips, "IPs", options.puts)
     puts(map(geolocate, routers.ips), "Geolocation", options.puts)
 
 rtt_is = []
 for i in range(2, len(routers.rtt)):
      rtt_is.append(routers.rtt[i]-routers.rtt[i-1])
 
-puts(zrtt_i(rtt_is, avg_rtt, standard_deviation_rtt), "ZRTT_i", options.puts)
+puts(zrtt_i(rtt_is), "ZRTT_i", options.puts)
