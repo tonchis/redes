@@ -57,8 +57,6 @@ routers = Router(ips=[], rtt=[])
 if (options.save) == 1:
     results = open(experiment_file_name(str(options.university)), 'w')
 for ttl in range(1, options.max_ttl + 1):
-    if (options.save) == 1:
-        results.write("University: " + str(options.university) + "\n")
 
     print "TTL:", ttl
 
@@ -98,6 +96,9 @@ for ttl in range(1, options.max_ttl + 1):
         print "  timeout - not storing"
 
 normalized_rtt_i = normalize_rtt_i(routers.rtt)
+
+if (options.save) == 1:
+    results.write("University: " + str(options.university) + "\n")
 
 puts(normalized_rtt_i, "RTTs", options.puts)
 if (options.save) == 1:
