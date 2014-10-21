@@ -99,7 +99,7 @@ normalized_rtt_i = normalize_rtt_i(routers.rtt)
 
 puts(normalized_rtt_i, "RTTs", options.puts)
 if (options.save) == 1:
-    results.write("RTTs: " + str(pprint.pprint(normalized_rtt_i)) + "\n")
+    results.write("RTTs: " + str(normalized_rtt_i) + "\n")
 
 avg_rtt = round(numpy.mean(normalized_rtt_i), 3)
 print "avg_rtt:", avg_rtt
@@ -121,7 +121,7 @@ if(options.geolocation == 1):
     puts(routers.ips, "IPs", options.puts)
     puts(geolocation, "Geolocation", options.puts)
     if (options.save) == 1:
-        results.write("IPs: " + str(pprint.pprint(routers.ips)) + "\n")
+        results.write("IPs: " + str(routers.ips) + "\n")
     if (options.save) == 1:
-        results.write("Geolocation: " + str(pprint.pprint(geolocation)) + "\n")
+        results.write("Geolocation: " + str(geolocation) + "\n")
         results.close()
