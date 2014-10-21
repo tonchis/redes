@@ -38,4 +38,4 @@ def store(routers, src, rtt_i):
     routers.rtt.append(rtt_i)
 
 def experiment_file_name(university):
-    return "./experiments/" + time.strftime('%y-%m-%d') + "_" + time.strftime('%X') + _ + university
+    return "./experiments/" + time.strftime('%y-%m-%d') + "_" + time.strftime('%X') + "_" + university
