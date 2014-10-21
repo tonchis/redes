@@ -35,3 +35,6 @@ def puts(data, name, print_type):
 def store(routers, src, rtt_i):
     routers.ips.append(src)
     routers.rtt.append(rtt_i)
+
+def experiment_file_name():
+    return "./experiments/" + time.strftime('%y-%m-%d') + "_" + time.strftime('%X')

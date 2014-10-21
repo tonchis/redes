@@ -23,6 +23,7 @@ option_parser.add_option("-g", "--geolocation", dest="geolocation", default="1",
 option_parser.add_option("-T", "--times", dest="times", default="3", type="int")
 option_parser.add_option("-p", "--puts", dest="puts", default="0", type="int")
 option_parser.add_option("-U", "--university", dest="university")
+option_parser.add_option("-s", "--save", dest="save", default="0", type="int")
 
 options, reminder = option_parser.parse_args()
 
@@ -54,6 +55,9 @@ def normalize_rtt_i(rtts):
 
 routers = Router(ips=[], rtt=[])
 for ttl in range(1, options.max_ttl + 1):
+    if (options.save) == 1:
+        results = open(experiment_file_name(), 'w')
+
     print "TTL:", ttl
 
     def sr1():
@@ -94,16 +98,29 @@ for ttl in range(1, options.max_ttl + 1):
 normalized_rtt_i = normalize_rtt_i(routers.rtt)
 
 puts(normalized_rtt_i, "RTTs", options.puts)
+if (options.save) == 1:
+    results.write("RTTs: " + str(pprint.pprint(normalized_rtt_i)))
 
 avg_rtt = round(numpy.mean(normalized_rtt_i), 3)
 print "avg_rtt:", avg_rtt
+if (options.save) == 1:
+    results.write("avg_rtt: " + str(avg_rtt))
 
 standard_deviation_rtt = round(numpy.std(normalized_rtt_i), 3)
 print "standard_deviation_rtt:", standard_deviation_rtt
+if (options.save) == 1:
+    results.write("standard_deviation_rtt: " + str(standard_deviation_rtt))
 
-print "zscore: ", map(lambda item: round(item, 3), z_score(normalized_rtt_i))
+zscore = map(lambda item: round(item, 3), z_score(normalized_rtt_i))
+print "zscore: ", zscore
+if (options.save) == 1:
+    results.write("z_score: " + str(zscore))
 
 if(options.geolocation == 1):
+    geolocation = map(geolocate, routers.ips)
     puts(routers.ips, "IPs", options.puts)
-    puts(map(geolocate, routers.ips), "Geolocation", options.puts)
-
+    puts(geolocation, "Geolocation", options.puts)
+    if (options.save) == 1:
+        results.write("IPs: " + str(pprint.pprint(routers.ips)))
+    if (options.save) == 1:
+        results.write("Geolocation: " + str(pprint.pprint(geolocation)))
