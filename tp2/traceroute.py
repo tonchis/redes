@@ -54,9 +54,9 @@ def normalize_rtt_i(rtts):
     return normalized
 
 routers = Router(ips=[], rtt=[])
+if (options.save) == 1:
+    results = open(experiment_file_name(), 'w')
 for ttl in range(1, options.max_ttl + 1):
-    if (options.save) == 1:
-        results = open(experiment_file_name(), 'w')
 
     print "TTL:", ttl
 
