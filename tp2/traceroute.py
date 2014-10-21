@@ -99,28 +99,29 @@ normalized_rtt_i = normalize_rtt_i(routers.rtt)
 
 puts(normalized_rtt_i, "RTTs", options.puts)
 if (options.save) == 1:
-    results.write("RTTs: " + str(pprint.pprint(normalized_rtt_i)))
+    results.write("RTTs: " + str(pprint.pprint(normalized_rtt_i) + "\n"))
 
 avg_rtt = round(numpy.mean(normalized_rtt_i), 3)
 print "avg_rtt:", avg_rtt
 if (options.save) == 1:
-    results.write("avg_rtt: " + str(avg_rtt))
+    results.write("avg_rtt: " + str(avg_rtt) + "\n")
 
 standard_deviation_rtt = round(numpy.std(normalized_rtt_i), 3)
 print "standard_deviation_rtt:", standard_deviation_rtt
 if (options.save) == 1:
-    results.write("standard_deviation_rtt: " + str(standard_deviation_rtt))
+    results.write("standard_deviation_rtt: " + str(standard_deviation_rtt) + "\n")
 
 zscore = map(lambda item: round(item, 3), z_score(normalized_rtt_i))
 print "zscore: ", zscore
 if (options.save) == 1:
-    results.write("z_score: " + str(zscore))
+    results.write("z_score: " + str(zscore) + "\n")
 
 if(options.geolocation == 1):
     geolocation = map(geolocate, routers.ips)
     puts(routers.ips, "IPs", options.puts)
     puts(geolocation, "Geolocation", options.puts)
     if (options.save) == 1:
-        results.write("IPs: " + str(pprint.pprint(routers.ips)))
+        results.write("IPs: " + str(pprint.pprint(routers.ips)) + "\n")
     if (options.save) == 1:
-        results.write("Geolocation: " + str(pprint.pprint(geolocation)))
+        results.write("Geolocation: " + str(pprint.pprint(geolocation)) + "\n")
+        results.close()
