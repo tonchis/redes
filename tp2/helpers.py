@@ -4,9 +4,6 @@ import pprint
 
 GEOLOCATION_ENDPOINT = "http://api.hostip.info/get_json.php"
 
-def add(x, y):
-        return x + y
-
 def is_local_network(ip):
     return re.compile("^192\.168").match(ip) != None
 
@@ -34,9 +31,6 @@ def puts(data, name, print_type):
         print name
         print " = "
         print data
-
-def map_with_two_decimals(ary):
-    return map(lambda item: round(item, 3), ary)
 
 def store(routers, src, rtt_i):
     routers.ips.append(src)

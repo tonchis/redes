@@ -89,25 +89,21 @@ for ttl in range(1, options.max_ttl + 1):
             print "  TIME EXCEEDED"
             store(routers, src, avg_rtt_i)
     else:
-        print "  timeout"
-        store(routers, None, avg_rtt_i)
+        print "  timeout - not storing"
 
-avg_rtt = round(numpy.mean(routers.rtt), 3)
-print "avg_rtt =", avg_rtt
+normalized_rtt_i = normalize_rtt_i(routers.rtt)
 
-standard_deviation_rtt = round(numpy.std(routers.rtt), 3)
-print "standard_deviation_rtt =", standard_deviation_rtt
+puts(normalize_rtt_i, "RTTs", options.puts)
 
-print "zscore: ", map_with_two_decimals(z_score(normalize_rtt_i(routers.rtt)))
+avg_rtt = round(numpy.mean(normalized_rtt_i), 3)
+print "avg_rtt:", avg_rtt
 
-puts(routers.rtt, "RTTs", options.puts)
+standard_deviation_rtt = round(numpy.std(normalized_rtt_i), 3)
+print "standard_deviation_rtt:", standard_deviation_rtt
+
+print "zscore: ", map(lambda item: round(item, 3), z_score(normalized_rtt_i))
 
 if(options.geolocation == 1):
     puts(routers.ips, "IPs", options.puts)
     puts(map(geolocate, routers.ips), "Geolocation", options.puts)
 
-rtt_is = []
-for i in range(2, len(routers.rtt)):
-     rtt_is.append(routers.rtt[i]-routers.rtt[i-1])
-
-puts(zrtt_i(rtt_is), "ZRTT_i", options.puts)
