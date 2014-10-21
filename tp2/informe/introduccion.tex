@@ -1,0 +1,45 @@
+\section{Introducción}
+
+\subsection{Internet Control Message Protocol}
+
+\indent \indent El \textbf{Internet Control Message Protocol (ICMP)} es un protocolo utilizado principalmente por dispositivos de red para administrar información relacionada con errores. Su objetivo es, por lo tanto, proveer mensajes de error y de control.\\
+\indent Existen diversos tipos de mensajes ICMP dependiendo del mensaje que se quiera transmitir. A lo largo de este trabajo nos enfocaremos, sin embargo, en tres: \\
+\begin{itemize}
+\item \textbf{Echo-Request (8)} : Corresponde al tipo de mensaje que es enviado por un host hacia otro, con objeto de recibir como respuesta un mensaje ICMP de tipo Echo-Reply.
+\item \textbf{Echo-Reply (0)}: Es el tipo de mensaje que devuelve un host al emisor de un paquete ICMP de tipo Echo-Request, informando de la correcta llegada del paquete.
+\item \textbf{Time Exceeded (11)}: Es el tipo de mensaje que envía un host que no es el destinatario final cuando le llega un paquete ICMP que consumió el TTL pero no ha llegado a destino.
+\end{itemize}
+
+\subsection{Time To Live}
+
+\indent \indent El \textbf{Time To Live}, o \textbf{TTL} es un mecanismo para limitar el ciclo de vida de un paquete. Cada vez que pasa un paquete transita por un host tratando de llegar a destino, el valor del TTL se disminuye en uno. Si el TTL es igual a cero pero no se ha llegado a destino, se descarta del paquete y se envía al emisor del datagrama original un mensaje de tipo Time Exceeded.\\
+
+\subsection{Traceroute}
+
+\indent \indent Traceroute es una herramienta diseñada con el fin de determinar el camino (en forma de direcciones IP's de los hops) de un paquete desde un host origen hacia uno destino, además de utilizarse para determinar los tiempos que tarda el paquete en llegar a los distintos eslabones de la ruta.\\
+\indent Existen diversas estrategias para implementar un traceroute, sin embargo nosotros nos enfocaremos en una basada en el envío de paquetes ICMP aumentando progresivamente el valor de TTL de los paquetes enviados.\\
+\indent La idea es, entonces, enviar paquetes ICMP de tipo Echo-Request al host para el que queremos conocer la ruta, arrancando con un valor de TTL igual a uno. Luego, se debe ir anotando las IP's que envían los paquetes de respuesta. Si el tipo de la respuesta es Time Exceeded, se anota la IP correspondiente y se envía otro paquete aumentando el TTL en uno. Si en cambio, el paquete de es tipo Echo-Reply se anota la IP y se deja de ciclar, puesto que se ha llegado a destino. Finalmente, si el tipo del mensaje es distinto de los mencionados anteriormente, se anota la IP como desconocida.\\
+\indent De esta manera, obtenemos una aproximación de la ruta que toma el paquete para llegar a destino. Sin embargo, debemos tener en cuenta que no necesariamente dos de estos paquetes enviados han seguido el mismo camino.\\
+
+\subsection{Round Trip Time}
+
+\indent \indent Se conoce como \textbf{Round Trip Time} al tiempo que tarda un paquete en llegar a un host sumado al tiempo que tarda la respuesta en llegar al emisor del paquete original.\\
+\indent En el contexto de este trabajo práctico, dada una ruta definida por n nodos, consideramos como $RRT_i$ al RTT entre el hop i y el hop i+1, con i entre uno y n.\\
+
+\subsection{Z score}
+
+\indent \indent El valor standard o \textbf{Z score} del RTT de cada salto se define como:\newline
+
+
+\begin{center}\Large \itshape
+$RTT_i = \frac{RTT_i - \overline{RTT}}{SRTT}$ \newline
+\end{center}
+
+\indent \indent donde $\overline{RTT}$ y SRTT se corresponden con el RTT promedio de los hops y el desvío standard de los RTT's de la ruta, respectivamente.\\
+
+\subsection{Sobre el objetivo del trabajo práctico}
+
+\indent \indent En este trabajo práctico se nos requirió en primer lugar implementar una \textit{tool} que permita realizar un traceroute mediante el envío de paquetes ICMP con TTLs incrementales.\\
+\indent Luego, se nos pidió modificar dicha \textit{tool} para que una vez terminada la búsqueda se calcule el Z score del RTT de cada salto.\\
+\indent Finalmente, con la datos obtenidos mediante la utilización de la \textit{tool} para tres host correspondientes a universidades distintas, se nos pidió realizar un análisis para poder determinar, en cada caso, los saltos correspondientes a enlaces submarinos.\\
+ 

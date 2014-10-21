@@ -1,0 +1,7 @@
+\section{Desarrollo}
+
+\indent \indent Para la confección de este Trabajo Práctico se implentó una herramienta en Python que nos provee la posibilidad de hacer un traceroute para un host. \\
+\indent Para ello, nos valimos de módulos como Scapy para realizar los envíos de los paquetes y recibir las respuestas correspondientes.\\
+\indent La idea del algoritmo es la explicada en la introducción de este trabajo. La única diferencia es que sólo nos guardamos las direcciones IP's que nos respondieron con mensajes de tipo Time exceeded o Echo-reply, indicándonos un mensaje del último el fin del traceroute.\\
+
+\indent Con esos datos, la herramienta implementada calcula los Z scores correspondientes a cada salto y finalmente para cada IP obtenida en el traceroute se la localización geográfica aproximada.\\

@@ -1,0 +1,8 @@
+\contentsline {section}{\numberline {1}Introducci\IeC {\'o}n}{2}{section.1}
+\contentsline {subsection}{\numberline {1.1}Internet Control Message Protocol}{2}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Time To Live}{2}{subsection.1.2}
+\contentsline {subsection}{\numberline {1.3}Traceroute}{2}{subsection.1.3}
+\contentsline {subsection}{\numberline {1.4}Round Trip Time}{2}{subsection.1.4}
+\contentsline {subsection}{\numberline {1.5}Z score}{2}{subsection.1.5}
+\contentsline {subsection}{\numberline {1.6}Sobre el objetivo del trabajo pr\IeC {\'a}ctico}{3}{subsection.1.6}
+\contentsline {section}{\numberline {2}Desarrollo}{4}{section.2}
