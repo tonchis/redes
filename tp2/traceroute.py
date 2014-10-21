@@ -93,7 +93,7 @@ for ttl in range(1, options.max_ttl + 1):
 
 normalized_rtt_i = normalize_rtt_i(routers.rtt)
 
-puts(normalized_rtt_i, "RTTs", options.puts)
+puts(map(lambda rtt_i: round(rtt_i, 3), normalized_rtt_i), "RTTs", options.puts)
 
 avg_rtt = round(numpy.mean(normalized_rtt_i), 3)
 print "avg_rtt:", avg_rtt
