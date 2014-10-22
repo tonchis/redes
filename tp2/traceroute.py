@@ -23,6 +23,7 @@ option_parser.add_option("-g", "--geolocation", dest="geolocation", default="1",
 option_parser.add_option("-T", "--times", dest="times", default="3", type="int")
 option_parser.add_option("-p", "--puts", dest="puts", default="0", type="int")
 option_parser.add_option("-U", "--university", dest="university")
+option_parser.add_option("-s", "--save", dest="save", default="0", type="int")
 
 options, reminder = option_parser.parse_args()
 
@@ -53,7 +54,10 @@ def normalize_rtt_i(rtts):
     return normalized
 
 routers = Router(ips=[], rtt=[])
+if (options.save) == 1:
+    results = open(experiment_file_name(str(options.university)), 'w')
 for ttl in range(1, options.max_ttl + 1):
+
     print "TTL:", ttl
 
     def sr1():
@@ -93,17 +97,34 @@ for ttl in range(1, options.max_ttl + 1):
 
 normalized_rtt_i = normalize_rtt_i(routers.rtt)
 
+if (options.save) == 1:
+    results.write("University: " + str(options.university) + "\n")
+
 puts(map(lambda rtt_i: round(rtt_i, 3), normalized_rtt_i), "RTTs", options.puts)
+if (options.save) == 1:
+    results.write("RTTs: " + str(normalized_rtt_i) + "\n")
 
 avg_rtt = round(numpy.mean(normalized_rtt_i), 3)
 print "avg_rtt:", avg_rtt
+if (options.save) == 1:
+    results.write("avg_rtt: " + str(avg_rtt) + "\n")
 
 standard_deviation_rtt = round(numpy.std(normalized_rtt_i), 3)
 print "standard_deviation_rtt:", standard_deviation_rtt
+if (options.save) == 1:
+    results.write("standard_deviation_rtt: " + str(standard_deviation_rtt) + "\n")
 
-print "zscore: ", map(lambda item: round(item, 3), z_score(normalized_rtt_i))
+zscore = map(lambda item: round(item, 3), z_score(normalized_rtt_i))
+print "zscore: ", zscore
+if (options.save) == 1:
+    results.write("z_score: " + str(zscore) + "\n")
 
 if(options.geolocation == 1):
+    geolocation = map(geolocate, routers.ips)
     puts(routers.ips, "IPs", options.puts)
-    puts(map(geolocate, routers.ips), "Geolocation", options.puts)
-
+    puts(geolocation, "Geolocation", options.puts)
+    if (options.save) == 1:
+        results.write("IPs: " + str(routers.ips) + "\n")
+    if (options.save) == 1:
+        results.write("Geolocation: " + str(geolocation) + "\n")
+        results.close()
