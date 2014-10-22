@@ -1,6 +1,7 @@
 import requests
 import re
 import pprint
+import time
 
 GEOLOCATION_ENDPOINT = "http://api.hostip.info/get_json.php"
 
@@ -35,3 +36,6 @@ def puts(data, name, print_type):
 def store(routers, src, rtt_i):
     routers.ips.append(src)
     routers.rtt.append(rtt_i)
+
+def experiment_file_name(university):
+    return "./experiments/" + time.strftime('%y-%m-%d') + "_" + time.strftime('%X') + "_" + university
