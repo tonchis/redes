@@ -1,0 +1,154 @@
+TTL: 1
+  rtt_i: 125.231
+  from 104.131.0.253
+  TIME EXCEEDED
+TTL: 2
+  rtt_i: 28.292
+  from 162.243.188.241
+  TIME EXCEEDED
+TTL: 3
+  rtt_i: 45.576
+  from 62.115.45.5
+  TIME EXCEEDED
+TTL: 4
+  rtt_i: 26.207
+  from 80.91.248.177
+  TIME EXCEEDED
+TTL: 5
+  rtt_i: 29.592
+  from 80.91.253.95
+  TIME EXCEEDED
+TTL: 6
+  rtt_i: 27.487
+  from 213.248.81.6
+  TIME EXCEEDED
+TTL: 7
+  rtt_i: 132.664
+  from 89.149.182.90
+  TIME EXCEEDED
+TTL: 8
+  rtt_i: 96.423
+  from 141.136.103.210
+  TIME EXCEEDED
+TTL: 9
+  rtt_i: 126.67
+  from 146.97.33.2
+  TIME EXCEEDED
+TTL: 10
+  rtt_i: 145.244
+  from 146.97.37.206
+  TIME EXCEEDED
+TTL: 11
+  rtt_i: 109.749
+  from 193.63.108.129
+  TIME EXCEEDED
+TTL: 12
+  rtt_i: 142.265
+  from 193.63.108.134
+  TIME EXCEEDED
+TTL: 13
+  rtt_i: 120.166
+  from 193.63.109.114
+  TIME EXCEEDED
+TTL: 14
+  rtt_i: 132.312
+  from 192.76.21.11
+  TIME EXCEEDED
+TTL: 15
+  rtt_i: 150.455
+  from 192.76.22.201
+  TIME EXCEEDED
+TTL: 16
+  rtt_i: 101.912
+  from 192.76.32.66
+  TIME EXCEEDED
+TTL: 17
+  rtt_i: 132.0
+  from 129.67.242.154
+  ECHO REPLY
+RTTs
+ =
+[125.231,
+ -96.939,
+ 17.284,
+ -19.369,
+ 3.385,
+ -2.105,
+ 105.177,
+ -36.241,
+ 30.247,
+ 18.574,
+ -35.495,
+ 32.516,
+ -22.099,
+ 12.146,
+ 18.143,
+ -48.543,
+ 30.088]
+avg_rtt: 7.765
+standard_deviation_rtt: 51.406
+zscore:  [2.285, -2.037, 0.185, -0.528, -0.085, -0.192, 1.895, -0.856, 0.437, 0.21, -0.842, 0.481, -0.581, 0.085, 0.202, -1.095, 0.434]
+IPs
+ =
+['104.131.0.253',
+ '162.243.188.241',
+ '62.115.45.5',
+ '80.91.248.177',
+ '80.91.253.95',
+ '213.248.81.6',
+ '89.149.182.90',
+ '141.136.103.210',
+ '146.97.33.2',
+ '146.97.37.206',
+ '193.63.108.129',
+ '193.63.108.134',
+ '193.63.109.114',
+ '192.76.21.11',
+ '192.76.22.201',
+ '192.76.32.66',
+ '129.67.242.154']
+Geolocation
+ =
+["Couldn't geolocate ip 104.131.0.253",
+ "Couldn't geolocate ip 162.243.188.241",
+ {'city': u'(Unknown city)',
+  'country': u'UNITED KINGDOM',
+  'position': {'latitude': None, 'longitude': None}},
+ {'city': u'Paris',
+  'country': u'FRANCE',
+  'position': {'latitude': u'48.8', 'longitude': u'2.33333'}},
+ "Couldn't geolocate ip 80.91.253.95",
+ {'city': u'(Unknown city)',
+  'country': u'EUROPEAN UNION',
+  'position': {'latitude': None, 'longitude': None}},
+ {'city': u'(Unknown city)',
+  'country': u'GERMANY',
+  'position': {'latitude': None, 'longitude': None}},
+ "Couldn't geolocate ip 141.136.103.210",
+ {'city': u'London',
+  'country': u'UNITED KINGDOM',
+  'position': {'latitude': u'51.5', 'longitude': u'-0.1167'}},
+ {'city': u'(Unknown city)',
+  'country': u'UNITED KINGDOM',
+  'position': {'latitude': None, 'longitude': None}},
+ {'city': u'(Unknown city)',
+  'country': u'UNITED KINGDOM',
+  'position': {'latitude': None, 'longitude': None}},
+ {'city': u'(Unknown city)',
+  'country': u'UNITED KINGDOM',
+  'position': {'latitude': None, 'longitude': None}},
+ {'city': u'Cardiff',
+  'country': u'UNITED KINGDOM',
+  'position': {'latitude': u'51.5', 'longitude': u'-3.2'}},
+ {'city': u'Oxford',
+  'country': u'UNITED KINGDOM',
+  'position': {'latitude': u'51.75', 'longitude': u'-1.25'}},
+ {'city': u'Oxford',
+  'country': u'UNITED KINGDOM',
+  'position': {'latitude': u'51.75', 'longitude': u'-1.25'}},
+ {'city': u'Oxford',
+  'country': u'UNITED KINGDOM',
+  'position': {'latitude': u'51.75', 'longitude': u'-1.25'}},
+ {'city': u'Oxford',
+  'country': u'UNITED KINGDOM',
+  'position': {'latitude': u'51.75', 'longitude': u'-1.25'}}]
