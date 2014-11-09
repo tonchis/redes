@@ -9,20 +9,20 @@
 #              Segundo cuatrimestre de 2014              #
 ##########################################################
 
-
+import pdb
 import random
 import threading
 
 from constants import NULL_ADDRESS, SHUT_RD, SHUT_WR, SHUT_RDWR,\
-                      WAIT, NO_WAIT, ABORT
+                      WAIT, NO_WAIT, ABORT, DEFAULT_ACK_DELAY_TIME, DEFAULT_ACK_DROP_PROBABILITY
 from exceptions import PTCError
 from protocol import PTCProtocol
 
 
 class Socket(object):
     
-    def __init__(self):
-        self.protocol = PTCProtocol()
+    def __init__(self, ack_delay_time=DEFAULT_ACK_DELAY_TIME, ack_drop_probability=DEFAULT_ACK_DROP_PROBABILITY):
+        self.protocol = PTCProtocol(ack_delay_time, ack_drop_probability)
         self.sockname = None
 
     def bind(self, address_tuple=None):
@@ -90,6 +90,7 @@ class Socket(object):
             raise PTCError('socket not connected')
     
     def send(self, data):
+        
         self._check_socket_connected()
         self.protocol.send(data)
  

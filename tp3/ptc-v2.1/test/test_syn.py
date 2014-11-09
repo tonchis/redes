@@ -11,6 +11,7 @@
 
 
 import ptc
+import pdb
 from ptc.packet import SYNFlag, ACKFlag
 from base import PTCTestCase
 
@@ -25,6 +26,7 @@ class SYNTest(PTCTestCase):
         # 2. Mandarle SYN
         seq_number = 1111
         syn_packet = self.packet_builder.build(flags=[SYNFlag], seq=seq_number)
+        pdb.set_trace()
         self.send(syn_packet)
 
         # 3. Obtener SYN/ACK
@@ -57,6 +59,7 @@ class SYNTest(PTCTestCase):
         client = self.launch_client()
         
         # 2. Recibir su SYN.
+        pdb.set_trace()
         syn_packet = self.receive(self.DEFAULT_TIMEOUT)
         received_seq_number = syn_packet.get_seq_number()
         self.assertIn(SYNFlag, syn_packet)

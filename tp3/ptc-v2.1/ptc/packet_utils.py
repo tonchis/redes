@@ -12,6 +12,7 @@
 
 import struct
 import socket
+import pdb
 
 from packet import PTCPacket, PTCFlag
 
@@ -32,7 +33,6 @@ class PacketBuilder(object):
         
     def build(self, payload=None, flags=None, seq=None, ack=None, window=None):
         packet = PTCPacket()
-
         packet.set_source_ip(self.source_address)
         packet.set_destination_ip(self.destination_address)
         packet.set_source_port(self.source_port)

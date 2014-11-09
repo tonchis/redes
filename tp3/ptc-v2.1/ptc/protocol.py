@@ -22,7 +22,9 @@ from constants import CLOSED, ESTABLISHED, SYN_SENT,\
                       NO_WAIT,\
                       MSS, MAX_SEQ, RECEIVE_BUFFER_SIZE,\
                       MAX_RETRANSMISSION_ATTEMPTS,\
-                      BOGUS_RTT_RETRANSMISSIONS
+                      BOGUS_RTT_RETRANSMISSIONS,\
+                      DEFAULT_ACK_DELAY_TIME,\
+                      DEFAULT_ACK_DROP_PROBABILITY
 from exceptions import PTCError
 from handler import IncomingPacketHandler
 from packet import ACKFlag, FINFlag, SYNFlag
@@ -37,7 +39,7 @@ from timer import RetransmissionTimer
 
 class PTCProtocol(object):
     
-    def __init__(self):
+    def __init__(self, ack_delay_time = DEFAULT_ACK_DELAY_TIME, ack_drop_probability=DEFAULT_ACK_DROP_PROBABILITY):
         self.state = CLOSED
         self.control_block = None
         self.packet_builder = PacketBuilder()
@@ -55,6 +57,8 @@ class PTCProtocol(object):
         self.close_event = threading.Event()
         self.initialize_threads()
         self.initialize_timers()
+        self.ack_delay_time = ack_delay_time
+        self.ack_drop_probability = ack_drop_probability
         
     def initialize_threads(self):
         self.packet_sender = PacketSender(self)
@@ -113,6 +117,7 @@ class PTCProtocol(object):
         
     def build_packet(self, seq=None, ack=None, payload=None, flags=None,
                      window=None):
+
         if seq is None:
             seq = self.control_block.get_snd_nxt()
         if flags is None:
@@ -123,6 +128,8 @@ class PTCProtocol(object):
             window = self.control_block.get_rcv_wnd()
         packet = self.packet_builder.build(payload=payload, flags=flags,
                                            seq=seq, ack=ack, window=window)
+        print "paquete con flags", packet.get_flags()
+        print "payload", payload
         return packet
 
     def send_and_queue(self, packet, is_retransmission=False):

@@ -58,3 +58,8 @@ MAX_RTO = 60 / CLOCK_TICK
 ALPHA = 0.125
 BETA = 0.25
 K = 4
+
+#Constantes vinculadas a la probabilidad de dropeo y al delay de paquetes ACK
+
+DEFAULT_ACK_DROP_PROBABILITY = 0
+DEFAULT_ACK_DELAY_TIME = 0.0
