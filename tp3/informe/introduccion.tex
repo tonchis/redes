@@ -1,0 +1,47 @@
+\section{Introducción}
+
+\subsection{Retransmission Timeout (RTO)}
+
+El \textit{timeout de retransmisión} es un valor utilizado en protocolos como
+\textbf{TCP} que sirve para \textit{asegurarse la entrega} de un paquete al
+recipiente, a pesar de la ausencia de todo \textit{feedback} de su parte.\\
+\\
+\indent Para computar el \textbf{RTO} actual, el emisor del paquete mantiene dos
+variables
+de estado: \textbf{SRTT} (\textit{smoothed round-trip time}) y \textbf{RTTVAR}
+(\textit{round-trip time variation}).\\
+\\
+\indent Cualquier implementación debe manejar el/los timer(s) de retransmisión
+de forma tal que \textit{un segmento \textbf{nunca} es retransmitido demasiado
+temprano} (es decir, en menos de un RTO luego de la transmisión del segmento
+anterior).\\
+\\
+\indent A continuación, dejamos el algoritmo \textbf{recomendado} en el
+\textbf{RFC 6298} para el manejo del timer de retransmisión:
+\begin{enumerate}
+ \item Cada vez que se envía un paquete con datos (incluyendo una
+	retransmisión), si el timer no está corriendo, se inicia el mismo para
+	que expire luego de \textit{RTO} segundos (para el valor actual de
+	\textit{RTO}).
+ \item Cuando se hizo \textit{ACK} de todos los datos, se apaga el timer de
+	retransmisión.
+ \item Cuando se recibe un \textit{ACK} que confirma nuevos datos, se reinicia
+	el timer de retransmisión para que expire luego de \textit{RTO}
+	segundos (para el valor actual de \textit{RTO}).
+\end{enumerate}
+Cuando expira el timer de retransmisión, hacer lo siguiente:
+\begin{enumerate}
+ \setcounter{enumi}{3}
+ \item Retransmitir el segmento más viejo que no haya sido confirmado
+	por el receptor de TCP.
+ \item El emisor debe setear \textbf{RTO $\leftarrow$ RTO * 2} (``hacer
+	\textit{back off} del timer"). Como valor para acotar superiormente
+	esta operación, se puede usar el valor de 60 segundos.
+ \item Comenzar el timer de retransmisión para que expire luego de \textit{RTO}
+	segundos (para el valor de \textit{RTO} conseguido luego de hacer la
+	operación de duplicación en el ítem número 5).
+ \item Si expira el timer esperando el \textit{ACK} de un segmento \textit{SYN}
+	y la implementación está usando un \textit{RTO} menor a 3 segundos, el
+	\textit{RTO} debe ser re-inicializado a 3 segundos cuando comienza la
+	transmisión de datos (es decir, luego de finalizar el three-way handshake).
+\end{enumerate}
