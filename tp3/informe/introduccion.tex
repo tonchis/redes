@@ -2,9 +2,10 @@
 
 \subsection{Retransmission Timeout (RTO)}
 
-El \textit{timeout de retransmisión} es un valor utilizado en protocolos como
-\textbf{TCP} que sirve para \textit{asegurarse la entrega} de un paquete al
-recipiente, a pesar de la ausencia de todo \textit{feedback} de su parte.\\
+El \textit{timeout de retransmisión} es un valor utilizado en protocolos 
+como \textbf{TCP} que sirve para \textit{asegurarse la entrega} de un paquete al
+recipiente, a pesar de la ausencia de todo \textit{feedback} de su parte. Se 
+encarga de reenviar los paquetes al no recibir confirmación de recepción.\\
 \\
 \indent Para computar el \textbf{RTO} actual, el emisor del paquete mantiene dos
 variables
@@ -43,5 +44,6 @@ Cuando expira el timer de retransmisión, hacer lo siguiente:
  \item Si expira el timer esperando el \textit{ACK} de un segmento \textit{SYN}
 	y la implementación está usando un \textit{RTO} menor a 3 segundos, el
 	\textit{RTO} debe ser re-inicializado a 3 segundos cuando comienza la
-	transmisión de datos (es decir, luego de finalizar el three-way handshake).
+	transmisión de datos (es decir, luego de finalizar el three-way 
+handshake).
 \end{enumerate}
