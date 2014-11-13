@@ -128,8 +128,8 @@ class PTCProtocol(object):
             window = self.control_block.get_rcv_wnd()
         packet = self.packet_builder.build(payload=payload, flags=flags,
                                            seq=seq, ack=ack, window=window)
-        print "paquete con flags", packet.get_flags()
-        print "payload", payload
+        #print "paquete con flags", packet.get_flags()
+        #print "payload", payload
         return packet
 
     def send_and_queue(self, packet, is_retransmission=False):
@@ -259,6 +259,7 @@ class PTCProtocol(object):
             # para enviar.
             return
         with self.control_block:
+            #print "HANDLE OUTGOING"
             # Analizar primero si tenemos un timeout de un paquete enviado.
             if self.retransmission_timer.has_expired() and\
                not self.rqueue.empty():
@@ -276,6 +277,9 @@ class PTCProtocol(object):
                 # viejo que aún no fue reconocido.
                 self.rto_estimator.back_off_rto()
                 packet = self.rqueue.head()
+                #print "---------------------------"
+                #print "voy a retransmitir", packet
+                #print "---------------------------"
                 self.send_and_queue(packet, is_retransmission=True)
             
             if self.write_stream_open or \
