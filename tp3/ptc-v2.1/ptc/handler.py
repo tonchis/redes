@@ -44,25 +44,21 @@ class IncomingPacketHandler(object):
                 # probabilidad de no enviar 1 / maximo
                 # o equivalente la probabilidad de que salga 1 con un dado de 'maximo' caras equilibrado
                 drop = (random.randint(1, maximo) == 1)
-        #print "------------------------------------"
         #print "drop ", drop
         #print "sleep time ", self.protocol.ack_delay_time
         #si lo tengo que enviar    
         if not drop:
-            print "#########"
-            print "NO DROPEO"
-            print "#########"
+            #print "NO DROPEO"
             #introduzco delay en el envio del ack si se definio sleep_time
             if(self.protocol.ack_delay_time > 0):
+                print "ME VOY A DORMIR"
                 time.sleep(self.protocol.ack_delay_time)
+                print "ME DESPIERTO"
             #finalmente envio el paquete en caso de que no haya que dropearlo
-            self.socket.send(ack_packet)
-            #self.protocol.send_and_queue(ack_packet)
-        else: 
-            print "########"
-            print "DROPEO"
-            print "########"
-        #print "------------------------------------"    
+            #self.socket.send(ack_packet)
+            self.protocol.send_and_queue(ack_packet)
+        #else: 
+            #print "DROPEO"
     def handle(self, packet):
         state = self.protocol.state
         if state == LISTEN:

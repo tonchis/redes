@@ -128,8 +128,8 @@ class PTCProtocol(object):
             window = self.control_block.get_rcv_wnd()
         packet = self.packet_builder.build(payload=payload, flags=flags,
                                            seq=seq, ack=ack, window=window)
-        print "paquete con flags", packet.get_flags()
-        print "payload", payload
+        #print "paquete con flags", packet.get_flags()
+        #print "payload", payload
         return packet
 
     def send_and_queue(self, packet, is_retransmission=False):
