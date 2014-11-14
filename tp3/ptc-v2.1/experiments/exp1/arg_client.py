@@ -11,7 +11,7 @@
 
 import sys
 try:
-    from ptc import Socket, SHUT_WR
+    from ptc import Socket, SHUT_WR, ALPHA, BETA
 except:
     sys.path.append('../../')
     from ptc import Socket, SHUT_WR
@@ -27,11 +27,11 @@ SERVER_PORT = 12345
 CLOCK_TICK = 0.01
 
 # Seteo alpha y beta de la linea de comandos
-ALPHA = sys.argv[1]
-BETA = sys.argv[2]
+alpha = sys.argv[1]
+beta = sys.argv[2]
 
 # Creo el arcihvo donde va el output
-filename = "./results/A_" + str(ALPHA).replace('.',',') + "-B_" + str(BETA).replace('.',',') + ".txt"
+filename = "./results/A_" + str(alpha).replace('.',',') + "-B_" + str(beta).replace('.',',') + ".txt"
 f = open(filename, 'w')
 
 to_send = 'a'
@@ -46,11 +46,13 @@ with Socket() as client_sock:
     # el host con dirección SERVER_IP. Esta llamada es bloqueante, aunque
     # en este caso se declara un timeout de 10 segundos. Pasado este tiempo,
     # el protocolo se dará por vencido y la conexión no se establecerá.
+    ALPHA = alpha
+    BETA = beta	
     client_sock.connect((SERVER_IP, SERVER_PORT))
     # Una vez aquí, la conexión queda establecida exitosamente. Podemos enviar
     # y recibir datos arbitrarios.
     i = 0
-    while i < 100:
+    while i < 50:
         client_sock.send(to_send)
         #espero a que llegue el ack?
         client_sock.recv(10)
