@@ -2,16 +2,31 @@
 
 \subsection{Retransmission Timeout (RTO)}
 
-El \textit{timeout de retransmisión} es un valor utilizado en protocolos 
+\indent \indent El \textit{timeout de retransmisión} es un valor utilizado en protocolos 
 como \textbf{TCP} que sirve para \textit{asegurarse la entrega} de un paquete al
 recipiente, a pesar de la ausencia de todo \textit{feedback} de su parte. Se 
 encarga de reenviar los paquetes al no recibir confirmación de recepción.\\
 \\
-\indent Para computar el \textbf{RTO} actual, el emisor del paquete mantiene dos
-variables
-de estado: \textbf{SRTT} (\textit{smoothed round-trip time}) y \textbf{RTTVAR}
-(\textit{round-trip time variation}).\\
+\indent La idea del \textbf{RTO} es, entonces, que dicho valor refleje el tiempo a esperar desde el envío de un paquete hasta el envío de la retransmisión correspondiente en caso de no recibir un reconocimiento del receptor.\\
+\indent Intuitivamente es fácil imaginar que un valor óptimo para el \textbf{RTO} es aquel que se aproxime de la mejor manera al \textbf{RTT} promedio de la comunicación, dado que un valor al \textbf{RTT} supondría el envío de una retransmisión antes de la llegada de la respuesta del receptor (en caso de haberse efectivizado), y un valor mayor al \textbf{RTT} supondría una pérdida de tiempo antes de retrasmitir.\\
+\indent De esta manera, es de esperar que a medida que se realicen progresivas comunicaciones entre dos host el \textbf{RTO} se vaya recalculando para reflejar así el tiempo recomendado de espera antes de retrasmitir un paquete.\\
+\indent Para computar el \textbf{RTO}, el emisor del paquete mantiene dos
+variables de estado, \textbf{SRTT} (\textit{smoothed round-trip time}) y \textbf{RTTVAR}(\textit{round-trip time variation}), así como también hace uso de ciertas constantes, $\alpha$, $\beta$ y $K$.\\
 \\
+\indent El algoritmo básico propuesto por el \textbf{RFC 6298} cuenta con los siguientes pasos:\\
+\begin{itemize}
+\item Para la primer medición de RTT, fijar:\\
+SRTT = RTT\\
+RTTVAR = $\frac{RTT}{2}$ \\
+RTO = SRTT * max(G, K*RTTVAR), siendo G la granuralidad del reloj y K=4.\\
+\item Para subsecuentes mediciones de RTT, debe ejecutarse, en este orden:\\
+RTTVAR = (1 - $\beta$) * RTTVAR + $\beta$ * $|$SRTT - RTT $|$\\
+SRTT = (1 - $\alpha$) * SRTT + $\alpha$ * RTT\\
+RTO = SRTT * max(G, K*RTTVAR), siendo G la granuralidad del reloj y K=4.\\
+\end{itemize}
+
+\indent El paper en cuestión sugiere utilizar $\alpha = \frac{1}{4} $ y $\beta = \frac{1}{8}$, valores que suponemos surgen de resultados empíricos en pruebas del algoritmo.\\
+
 \indent Cualquier implementación debe manejar el/los timer(s) de retransmisión
 de forma tal que \textit{un segmento \textbf{nunca} es retransmitido demasiado
 temprano} (es decir, en menos de un RTO luego de la transmisión del segmento
@@ -47,3 +62,8 @@ Cuando expira el timer de retransmisión, hacer lo siguiente:
 	transmisión de datos (es decir, luego de finalizar el three-way 
 handshake).
 \end{enumerate}
+
+\subsection{Sobre este Trabajo Pŕactico}
+
+\indent \indent El objetivo de este trabajo práctico será analizar el comportamiento del protocolo PTC provisto por la cátedra con respecto al cálculo del RTO, simulando en un esquema cliente-servidor en el ámbito de una red local delay y pérdida de paquetes en el envío de los \textbf{ACK} por parte del segundo.\\
+\indent Además, se experimentará alterando los valores de $\alpha$ y $\beta$ propuestos por el algoritmo descripto en la sección anterior y se estudiará su impacto a la hora de calcular el RTO, con el fin de determinar algunos valores óptimos que lo acerquen tanto como sea posible al RTT real.
