@@ -3,7 +3,7 @@
 ##########################################################
 #                 Trabajo Práctico 3                     #
 #         Programación de protocolos end-to-end          #
-#                                                        # 
+#                                                        #
 #              Teoría de las Comunicaciones              #
 #                       FCEN - UBA                       #
 #              Segundo cuatrimestre de 2014              #
@@ -36,7 +36,7 @@ with Socket(4,0) as server_sock:
     server_sock.accept()
 
     i = 0
-    while i< 50:
+    while i< 100:
     	server_sock.recv(10)
         server_sock.send('b')
         i = i+1
