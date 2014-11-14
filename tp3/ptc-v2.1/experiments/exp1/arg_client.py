@@ -27,8 +27,8 @@ SERVER_PORT = 12345
 CLOCK_TICK = 0.01
 
 # Seteo alpha y beta de la linea de comandos
-alpha = sys.argv[1]
-beta = sys.argv[2]
+alpha = float(sys.argv[1])
+beta = float(sys.argv[2])
 
 # Creo el arcihvo donde va el output
 filename = "./results/A_" + str(alpha).replace('.',',') + "-B_" + str(beta).replace('.',',') + ".txt"
@@ -51,8 +51,10 @@ with Socket() as client_sock:
     client_sock.connect((SERVER_IP, SERVER_PORT))
     # Una vez aquí, la conexión queda establecida exitosamente. Podemos enviar
     # y recibir datos arbitrarios.
-    i = 0
-    while i < 50:
+    client_sock.protocol.rto_estimator.alpha = alpha
+    client_sock.protocol.rto_estimator.beta = beta
+    i = 1
+    while i <= 50:
         client_sock.send(to_send)
         #espero a que llegue el ack?
         client_sock.recv(10)
