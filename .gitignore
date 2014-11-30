@@ -1,5 +1,7 @@
-tmp/
-*.pyc
-*.log
-*.aux
-tp1/informe/*.pdf
+/tmp/
+/**/*.pyc
+/**/*.log
+/**/*.aux
+/**/*.bbl
+/**/*.gz
+/tp1/informe/*.pdf
