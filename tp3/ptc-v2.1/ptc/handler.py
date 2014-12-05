@@ -15,6 +15,8 @@ from constants import CLOSED, SYN_RCVD, ESTABLISHED, SYN_SENT,\
                       LAST_ACK, CLOSING
 from packet import SYNFlag, ACKFlag, FINFlag
 import time
+import random
+import math
 
 
 class IncomingPacketHandler(object):
