@@ -59,7 +59,6 @@ ALPHA = 0.125
 BETA = 0.25
 K = 4
 
-#Constantes vinculadas a la probabilidad de dropeo y al delay de paquetes ACK
-
-DEFAULT_ACK_DROP_PROBABILITY = 0
-DEFAULT_ACK_DELAY_TIME = 0.0
+#Constantes vinculadas al delay la probabibilidad de pérdida de paquetes
+DELAY = 0 
+DROP = 0.0

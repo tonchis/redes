@@ -12,14 +12,14 @@
 
 import threading
 
-from constants import INITIAL_RTO, MAX_RTO, ALPHA, BETA, K, CLOCK_TICK
+from constants import INITIAL_RTO, MAX_RTO, ALPHA, BETA, K
 from seqnum import SequenceNumber
 
 
 # Estimación de RTO según el RFC 6298, pero implementado en forma naive.
 class RTOEstimator(object):
     
-    def __init__(self, protocol):
+    def __init__(self, protocol, alpha = ALPHA, beta= BETA):
         self.srtt = 0
         self.rttvar = 0
         self.rto = INITIAL_RTO
@@ -27,8 +27,8 @@ class RTOEstimator(object):
         self.tracking = False
         self.lock = threading.RLock()
         self.rtt = 0
-        self.alpha = ALPHA
-        self.beta = BETA
+        self.alpha = alpha
+        self.beta = beta
     
     def get_current_rto(self):
         with self.lock:
@@ -71,7 +71,7 @@ class RTOEstimator(object):
                 sampled_rtt = self.protocol.get_ticks() - self.rtt_start_time
                 self.rtt = sampled_rtt
                 self.update_rtt_estimation_with(sampled_rtt)
-                self.update_rto(sampled_rtt)
+                self.update_rto()
                 self.untrack()
                 
     def update_rtt_estimation_with(self, sampled_rtt):
@@ -84,14 +84,13 @@ class RTOEstimator(object):
             # Tenemos por lo menos una muestra, por lo que actualizamos los
             # valores según el paso 2.2 del RFC.
             deviation = abs(self.srtt - sampled_rtt)
-            #print "ALPHA ", self.alpha
-            #print "BETA ", self.beta
-            self.rttvar = (1 - self.beta) * self.rttvar + self.beta * deviation
-            self.srtt = (1 - self.alpha) * self.srtt + self.alpha * sampled_rtt
+            #self.rttvar = (1 - BETA) * self.rttvar + BETA * deviation
+            self.rttvar = (1- self.beta) * self.rttvar + self.beta * deviation
+            #self.srtt = (1 - ALPHA) * self.srtt + ALPHA * sampled_rtt
+            self.srtt = (1-self.alpha) * self.srtt + self.alpha * sampled_rtt
             
-    def update_rto(self, sampled_rtt=0):
+    def update_rto(self):
         self.rto = self.srtt + max(1, K * self.rttvar)
-        #print sampled_rtt*CLOCK_TICK, "-", self.rto*CLOCK_TICK
     
     def ack_covers_tracked_packet(self, ack_number):
         iss = self.protocol.iss

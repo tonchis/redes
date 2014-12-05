@@ -14,9 +14,8 @@ from constants import CLOSED, SYN_RCVD, ESTABLISHED, SYN_SENT,\
                       LISTEN, FIN_WAIT1, FIN_WAIT2, CLOSE_WAIT,\
                       LAST_ACK, CLOSING
 from packet import SYNFlag, ACKFlag, FINFlag
-import random
-import math
 import time
+
 
 class IncomingPacketHandler(object):
     
@@ -35,30 +34,19 @@ class IncomingPacketHandler(object):
         self.protocol.set_state(state)
         
     def send_ack(self):
-        ack_packet = self.build_packet()
-        
         drop = False
-        if self.protocol.ack_drop_probability > 0: 
-            maximo = int(round(pow(self.protocol.ack_drop_probability,-1)))
+        if self.protocol.drop > 0:
+            maximo = int(round(pow(self.protocol.drop,-1)))
             if maximo > 0:
                 # probabilidad de no enviar 1 / maximo
                 # o equivalente la probabilidad de que salga 1 con un dado de 'maximo' caras equilibrado
                 drop = (random.randint(1, maximo) == 1)
-        #print "drop ", drop
-        #print "sleep time ", self.protocol.ack_delay_time
-        #si lo tengo que enviar    
-        if not drop:
-            #print "NO DROPEO"
-            #introduzco delay en el envio del ack si se definio sleep_time
-            if(self.protocol.ack_delay_time > 0):
-                print "ME VOY A DORMIR"
-                time.sleep(self.protocol.ack_delay_time)
-                print "ME DESPIERTO"
-            #finalmente envio el paquete en caso de que no haya que dropearlo
-            #self.socket.send(ack_packet)
-            self.protocol.send_and_queue(ack_packet)
-        #else: 
-            #print "DROPEO"
+        if(not drop):
+            ack_packet = self.build_packet()
+            if(self.protocol.delay > 0):
+                time.sleep(self.protocol.delay)
+            self.socket.send(ack_packet)
+
     def handle(self, packet):
         state = self.protocol.state
         if state == LISTEN:
