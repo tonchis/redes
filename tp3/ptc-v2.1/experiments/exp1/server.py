@@ -35,8 +35,8 @@ with Socket(2,0) as server_sock:
     # dará por vencido.
     server_sock.accept()
 
-    i = 0
-    while i< 100:
+    i = 1
+    while i<= 50:
     	server_sock.recv(10)
         server_sock.send('b')
         i = i+1
