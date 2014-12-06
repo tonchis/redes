@@ -42,8 +42,46 @@ Vemos que resulta interesante la gran cantidad de veces que se solicita la IP 19
 
 Por esto creemos que podría tratarse de un nodo mal configurado, buscando una IP que ya no existe en la red, lo cual parece en consonancia con la gran cantidad de pedidos ARP que el router le hace.\newline
 
-Finalmente, calculamos la entropía de las fuentes origen y destino: 3.44356252078915 y 4.652923252101102, respectivamente.\newline
+\subsubsection{Detección de nodos significativos}
 
+Nos interesa poder detectar de manera automática nodos significativos midiendo la \textit{información} contra la \textit{entropía} de la fuente como explicamos en la sección \textit{desarrollo}.\newline
+
+Calculamos la entropía de las fuentes origen y destino: 3.44 y 4.65, respectivamente.\newline
+
+Luego indentificamos las IP con \textit{información} menor a la \textit{entropía} en cada una de las fuentes:\newline
+
+\begin{tabular}{c c}
+\begin{tabular}{ | c | c  | }
+	\hline
+	Entropía origen & 3.44 \\
+	\hline
+	IP                      & Información \\
+	\hline
+	192.168.0.1     & 1.41 \\
+	0.0.0.0 		     & 3.21 \\
+	\hline
+\end{tabular}
+&
+\begin{tabular}{ | c | c  | }
+	\hline
+	Entropía destino & 4.65 \\
+	\hline
+	IP 		                  & Información \\
+	\hline
+	192.168.0.193  & 2.09 \\
+	192.168.0.1      & 2.48 \\
+	192.168.0.195  & 3.00 \\
+	\hline
+\end{tabular}
+\\
+\end{tabular}
+\newline
+
+Con estos nuevos datos, recordemos el gráfico con los nodos que comparten más de mil mensajes:\newline
+
+\includegraphics[scale=0.30]{graphics/t-work-all-1000w.png}
+
+Vemos cómo los dos nodos que menos \textit{información} nos proveen son los que más \textit{request ARP} intercambian, 192.168.0.1 busca a 192.168.0.192 21301 veces. También se confirma que el router es uno de los nodos más requeridos de la red.\newline
 
 \subsection{Caso de estudio: Otra red laboral}
 

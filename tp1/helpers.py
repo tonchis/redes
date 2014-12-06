@@ -2,6 +2,7 @@ from __future__ import division
 import scapy.utils
 import collections
 import math
+import operator
 
 # Sample of ARP packets.
 #
@@ -53,11 +54,26 @@ def frequency_of_occurrence(arp_sample):
 def relative_frequency(ips, sample):
     return map(lambda ip: sample.count(ip) / len(sample), ips)
 
+def ips_and_frequencies(arp_sample):
+    ips = ips_in_sample(arp_sample)
+
+    return IPFrequency(src=ip_freq_dict(ips, arp_sample.src), dst=ip_freq_dict(ips, arp_sample.dst))
+
+def ip_freq_dict(ips, sample):
+    dictionary = {}
+    for ip in ips:
+        dictionary[ip] = sample.count(ip) / len(sample)
+
+    return dictionary
+
 # Holds the entropy of the ARPSample.
 #
 # ARPSampleEntropy#src: [Float] entropy of source.
 # ARPSampleEntropy#dst: [Float] entropy of destination.
 ARPSampleEntropy = collections.namedtuple("ARPSampleEntropy", ["src", "dst"])
+
+# Holds distinguished nodes
+ARPSampleDistinguished = collections.namedtuple("ARPSampleDistinguished", ["src", "dst"])
 
 # Calculates the entropy of the sample.
 #
@@ -69,12 +85,33 @@ def entropy(arp_sample):
 
     return ARPSampleEntropy(src=map_reduce_entropy(frequency.src), dst=map_reduce_entropy(frequency.dst))
 
-def map_reduce_entropy(frequencies):
-    weighted_information = lambda x: 0.0 if x == 0.0 else -math.log(x, 2) * x
-    return reduce(add, map(weighted_information, frequencies))
-
 def add(x, y):
     return x + y
 
+def information(frequency):
+    return -math.log(frequency, 2)
+
+def map_reduce_entropy(frequencies):
+    weighted_information = lambda x: 0.0 if x == 0.0 else information(x) * x
+    return reduce(add, map(weighted_information, frequencies))
+
 def count_packets_between(arp_sample, src, dst):
     return reduce(add, list((1 if arp_sample.src[index] == src and arp_sample.dst[index] == dst else 0) for index in range(len(arp_sample.src))))
+
+def distinguished_nodes(arp_sample):
+    sample_entropy = entropy(arp_sample)
+    ips = ips_and_frequencies(arp_sample)
+    return ARPSampleDistinguished(src=select_distinguished_nodes(ips.src, sample_entropy.src),
+                                  dst=select_distinguished_nodes(ips.dst, sample_entropy.dst))
+
+def select_distinguished_nodes(ips, sample_entropy):
+    distinguished_nodes = {}
+    for ip in ips.viewkeys():
+        freq = ips[ip]
+        if freq > 0.0 and information(freq) < sample_entropy:
+            distinguished_nodes[ip] = information(freq)
+
+    return distinguished_nodes
+
+def sort_by_info(ips):
+    return sorted(ips.items(), key=operator.itemgetter(1))
