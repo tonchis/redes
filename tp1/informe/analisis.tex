@@ -2,36 +2,8 @@
 
 \subsection{Caso de estudio: Red laboral}
 
-\indent \indent Antes de analizar la captura sosteníamos como hipótesis que la topología de los mensajes ``tendría forma de árbol'' con el router en su raíz y tantas hojas como hosts dentro de la red, con poco o nada de interacción entre ellos.\\
-\indent También suponíamos que la mayoría de las redes \textit{subneteadas} con un router tendrían necesariamente esta forma.\\
-\indent En este caso estudiamos la red de una oficina con alrededor de 40 computadoras y teléfonos celulares.\\
-\indent La captura duró alrededor de seis horas y se compone de más de noventa mil mensajes ARP who-has. Con este volumen de datos fue necesario seccionar el análisis bajo diferentes criterios, como la cantidad de mensajes o una cantidad mínima de mensajes entre nodos.\\
-\indent Los grafos presentados a continuación muestran direcciones IP como nodos unidos por un eje si el nodo origen realizó un broadcast ARP who-has buscando al nodo destino.\\
-\indent Para empezar, mostramos los primeros diez mil requests entre los nodos que se enviaron diez o más mensajes. Elegimos esta parte de la muestra tras haber visto que graficar más nodos agrega poca información nueva respecto de los nodos más relevantes.\\
-
-\includegraphics[scale=0.25,angle=90]{graphics/t-work-10000c-10w.png}
-
-\indent A primera vista notamos que hay ciertos nodos que resaltan sobre los demás como el 192.168.0.1 (router), o 192.168.0.126. Si bien la estructura de este digrafo no es un árbol, se nota que hay cierta jerarquía.\\
-\indent Un nodo interesante que resalta es el 169.254.255.255, porque es la única IP no privada que aparece en la red. Analizando este caso en particular, vemos que siempre es buscado por nodos de la red (y éste nunca busca a nadie), lo que nos hace suponer que puede tratarse de un servicio, como un servidor de DNS.\\
-
-\includegraphics[scale=0.25,clip=true,trim=700 0 720 0]{graphics/t-work-ip-169-254-255-255.png}
-
-\indent Investigando el resto de la captura, notamos que los demás paquetes que recibe son del protocolo NetBIOS Name Service, con lo que podemos afirmar que en este nodo funciona un NetBIOS Server.\\
-\indent Para poder reconocer mejor cuáles son los nodos más importantes de la red veamos el siguiente grafo, donde se estudia toda la muestra pero sólo nos quedamos con aquellos nodos que compartieron más de mil mensajes.\newline
-
-\includegraphics[scale=0.30]{graphics/t-work-all-1000w.png}
-
-\indent Viendo los mensajes ARP de esta manera podemos notar varias cosas. Por un lado que tiene forma de árbol, pero el nodo raíz no es el router, como suponíamos originalmente. Vemos que hay muchos requests ARP que tienen origen en el 0.0.0.0 y como destino diversos nodos de la red, pero ésta no es una IP del rango privado.\\
-\indent Este primer hecho nos llevó a conocer que un ARP con origen 0.0.0.0 es parte de una técnica para detectar direcciones IP duplicadas dentro de una red. En este caso, se estaba queriendo detectar si las direcciones terminadas en 51, 56, 68, 76 ó 164 estaban duplicadas.\\
-
-\newpage
-
-\indent También nos pareció relevante analizar el router en particular.\\
-
-\includegraphics[scale=0.3]{graphics/t-work-router-1000w.png}
-
-\indent Vemos que resulta interesante la gran cantidad de veces que se solicita la IP 192.168.0.193. Para saber más sobre lo que podría estar sucediendo con ese host, revisamos el resto de la captura pero encontramos que no había ningún paquete con esa dirección origen ni destino.\\
-\indent Por esto creemos que podría tratarse de un nodo mal configurado, buscando una IP que ya no existe en la red, lo cual parece en consonancia con la gran cantidad de pedidos ARP que el router le hace.\\
+\indent \indent En este caso estudiamos la red de una oficina con alrededor de 40 computadoras y teléfonos celulares.\\
+\indent La captura duró alrededor de seis horas y se compone de más de noventa mil mensajes ARP who-has. Con este volumen de datos fue necesario seccionar el análisis bajo diferentes criterios a la hora de observar los grafos dirigidos que se crearon en base a los resultados, como la cantidad de mensajes o una cantidad mínima de mensajes entre nodos.\\
 
 \subsubsection{Detección de nodos significativos}
 
@@ -40,11 +12,13 @@
 \indent \indent Siguiendo el método indicado en la sección \textbf{Desarrollo}, calculamos la entropía de las fuentes y la información de los símbolos de cada una, para poder contrastarlos.\\
 \indent Con los datos obtenidos, se confeccionaron los siguientes gráficos:\\
 
+\begin{center}
 \includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/tonchis_src.png}
 
 \includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/tonchis_dst.png}
+\end{center}
 
-\indent Más en detalle, los datos de los nodos que consideramos distinguidos son:\\
+\indent Más en detalle, los datos de los nodos que consideramos distinguidos de acuerdo al criterio establecido son:\\
 \begin{center}
 \begin{tabular}{c c}
 \begin{tabular}{ | c | c  | }
@@ -72,11 +46,42 @@
 \end{tabular}
 \end{center}
 
-Con estos nuevos datos, recordemos el gráfico con los nodos que comparten más de mil mensajes:\newline
+
+\subsubsection{Grafos de la captura}
+
+\indent \indent Antes de analizar la captura sosteníamos como hipótesis que la topología de los mensajes ``tendría forma de árbol'' con el router en su raíz y tantas hojas como hosts dentro de la red, con poco o nada de interacción entre ellos.\\
+\indent También suponíamos que la mayoría de las redes \textit{subneteadas} con un router tendrían necesariamente esta forma.\\
+\indent Los grafos presentados a continuación muestran direcciones IP como nodos unidos por un eje si el nodo origen realizó un broadcast ARP who-has buscando al nodo destino.\\
+\indent Para empezar, mostramos los primeros diez mil requests entre los nodos que se enviaron diez o más mensajes. Elegimos esta parte de la muestra tras haber visto que graficar más nodos agrega poca información nueva respecto de los nodos más relevantes.\\
+
+\begin{center}
+\includegraphics[scale=0.25,angle=90]{graphics/t-work-10000c-10w.png}
+\end{center}
+
+\indent A primera vista notamos que hay ciertos nodos que resaltan sobre los demás como el 192.168.0.1 (router), o 192.168.0.126. Si bien la estructura de este digrafo no es un árbol, se nota que hay cierta jerarquía. En particular, se puede observar la relevancia del nodo 192.168.0.1, uno de los que en base a nuestro criterio consideramos como distinguido.\\
+\indent Un nodo interesante que resalta es el 169.254.255.255, porque es la única IP no privada que aparece en la red. Analizando este caso en particular, vemos que siempre es buscado por nodos de la red (y éste nunca busca a nadie), lo que nos hace suponer que puede tratarse de un servicio, como un servidor de DNS. Sin embargo, no es lo suficientemente relevante para ser considerado un nodo distinguido siguiendo nuestro criterio:\\
+
+\includegraphics[scale=0.25,clip=true,trim=700 0 720 0]{graphics/t-work-ip-169-254-255-255.png}
+
+\indent Investigando el resto de la captura, notamos que los demás paquetes que recibe son del protocolo NetBIOS Name Service, con lo que podemos afirmar que en este nodo funciona un NetBIOS Server.\\
+\indent Para poder verificar mejor si los nodos distinguidos del inciso anterior se corresponden con los nodos más importantes de la red veamos el siguiente grafo, donde se estudia toda la muestra pero sólo nos quedamos con aquellos nodos que compartieron más de mil mensajes.\newline
 
 \includegraphics[scale=0.30]{graphics/t-work-all-1000w.png}
 
-Vemos cómo los dos nodos que menos \textit{información} nos proveen son los que más \textit{request ARP} intercambian, 192.168.0.1 busca a 192.168.0.192 21301 veces. También se confirma que el router es uno de los nodos más requeridos de la red.\newline
+\indent Y un poco más en detalle, enfocándonos en el router, es decir en la dirección 192.168.0.1:\\
+
+\begin{center}
+\includegraphics[scale=0.3]{graphics/t-work-router-1000w.png}
+\end{center}
+
+\indent Viendo los mensajes ARP de esta manera en ambos grafos podemos notar varias cosas. Por un lado que tiene forma de árbol, pero el nodo raíz no es el router, como suponíamos originalmente. Vemos que en concordancia con nuestra consideración de nodo distinguido para la fuente origen, hay muchos requests ARP que tienen origen en el 0.0.0.0 y como destino diversos nodos de la red, aunque ésta no es una IP del rango privado.\\
+\indent Este nos llevó a investigar y conocer que un ARP con origen 0.0.0.0 es parte de una técnica para detectar direcciones IP duplicadas dentro de una red. En este caso, se estaba queriendo detectar si las direcciones terminadas en 51, 56, 68, 76 ó 164 estaban duplicadas.\\
+\indent Es notable la gran cantidad de pedidos que recibe la IP 192.168.0.195, otro de los nodos que distinguimos con nuestro criterio.\\
+\indent De estos grafos se extrae además que dos de los nodos que consideramos distinguidos son los que más \textit{request ARP} intercambian, ocurriendo que  192.168.0.1 busca a 192.168.0.193 21301 veces. Estos gráficos parecen confirmar la efectividad del criterio, puesto que nos permite establecer la correspondencia del nodo 192.168.0.1 como  distinguido para la fuente origen, y el 192.168.0.193 como distinguido para la fuente destino.\\
+\indent El grafo enfocado en el router nos permite además verificar que en efecto la dirección 192.168.0.1 es un nodo distinguido para la fuente destino.\\
+\indent Nos resultó interesante la gran cantidad de veces que se pide la IP 192.168.0.193 y el porqué de que podamos considerarlo un nodo distinguido. Para saber más sobre lo que podría estar sucediendo con ese host, revisamos el resto de la captura pero encontramos que no había ningún paquete con esa dirección origen ni destino.\\
+\indent Por esto creemos que podría tratarse de un nodo mal configurado, buscando el router una IP que ya no existe en la red, lo cual parece en consonancia con la gran cantidad de pedidos ARP que le hace.\\
+
 
 \newpage
 \subsection{Caso de estudio: Otra red laboral}
@@ -90,7 +95,7 @@ Vemos cómo los dos nodos que menos \textit{información} nos proveen son los qu
 
 \subsubsection{Primeros mil paquetes ARP who-has (Muestra chica)}
 
-\indent En base a la experimentación realizada, se obtuvieron los siguientes valores de entropía para las fuentes \textit{Fuente} y \textit{Destino}.\\
+\indent \indent En base a la experimentación realizada, se obtuvieron los siguientes valores de entropía para las fuentes \textit{Fuente} y \textit{Destino}.\\
 
 \begin{center}
 	\begin{tabular}{ | c | c | c |} \hline
@@ -101,16 +106,18 @@ Vemos cómo los dos nodos que menos \textit{información} nos proveen son los qu
 
 \indent \indent Analizando las IP's que contienen menos información se obtuvo el siguiente gráfico de barras, que representa la información calculada por IP para la fuente \textit{Fuente}. La recta azul representa la entropía de dicha fuente.\\
 
-
+\begin{center}
 \includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_chica_src.png}
-
+\end{center}
 \indent De este gráfico se puede extraer que, siguiendo el criterio que mencionamos en secciones anteriores, el nodo que consideramos distinguido para esta fuente es la IPs 192.168.200.100, que, se entiende, es la que mayor cantidad de pedidos realiza.
 
 %\indent Es de notar que para el gráfico anterior se consideraron IP's con más de cinco pedidos\ realizados. Se observa claramente que la IP 192.168.200.100 realiza la mayor cantidad de pedidos, seguido de lejos por las direcciones 192.168.200.240 y la 192.168.200.86. Se extrae de aquí, entonces, que estas IP's son los símbolos que menor valor aportan a la entropía de la fuente.\\
 
 \indent Para la fuente destino, se obtuvo el siguiente gráfico:
 
+\begin{center}
 \includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_chica_dst.png}
+\end{center}
 
 \indent Aquí se observa que el único símbolo cuya información es menor a la entropía es la IP 192.168.200.118, siendo así el nodo que determinamos como distinguido. Equivalentemente se lo puede pensar como el nodo que más ha sido pedido.\\
 \indent Mencionamos también para este caso las direcciones IPs 192.168.200.153 y 192.168.200.240, que si bien no cumplen con el criterio establecido para considerarlos distinguidos tendrán más relevancia a medida que se consideren más paquetes de la captura.\\
@@ -123,81 +130,83 @@ Vemos cómo los dos nodos que menos \textit{información} nos proveen son los qu
 
 \indent Dado que el grafo no posee peso en sus aristas pero analizándolo en conjunción con los gráficos anteriores, se puede observar que aunque la dirección 192.168.200.118 fue la más pedida en cantidad de pedidos totales, las IP's 192.168.200.240 y 192.168.200.153 fueron pedidas por una mayor cantidad de hosts distintos, por lo cual creemos que tienen más relevancia en la red.\\
 
-
 \subsubsection{Primeros seis mil paquetes ARP who-has (Muestra mediana)}
 
-\indent \indent Análogamente al subcaso anterior, mostramos los gráficos que obtuvimos.\\
-\indent Para la fuente origen:\\
+\indent \indent Análogamente al subcaso anterior, obtuvimos los siguientes valores de entropía:\\
 
+\begin{center}
+	\begin{tabular}{ | c | c | c |} \hline
+	   & \textbf{$S_{src}$} & \textbf{$S_{dst}$} \\ \hline
+	  	\textbf{Entropía} & 3,54 bits & 3,43 bits \\ \hline
+	\end{tabular}
+\end{center}
+
+\indent Creemos que el aumento en las valores de las entropías se corresponde con el hecho de la aparición de una mayor cantidad de direcciones IP's, que al aparecer en pocas oportunidades en las fuentes proveen más información.\\
+\indent Para la fuente origen, se obtuvo el siguiente gŕafico:\\
+\begin{center}
 \includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_mediana_src.png}
+\end{center}
 
-\indent En este caso se consideraron IP's que realizaron más de 10 peticiones. Aquí sobresale claramente, al igual que en el subcaso anterior, la IP 192.168.200.100, seguida nuevamente por la dirección 192.168.200.240.\\
+\indent Se observa que los nodos distinguidos son las IPs 192.168.200.100 y la 192.168.200.240.
 
 \indent Sobre la fuente destino:\\
-
+\begin{center}
 \includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_mediana_dst.png}
+\end{center}
 
-\indent  Se observan resultados similares al subcaso de los primeros 1000 paquetes ARP capturados. Aquí ya empezamos a sospechar que la dirección 192.168.200.240 podría tratar se un router o algún artefacto de similares características, puesto que es participe tanto de pedidos como de respuestas.\\
+\indent  Se observa que el nodo 192.168.200.118 sigue siendo un nodo distinguido al igual que en el subcaso anterior, pero ahora también podemos determinar como distinguido a la IP 192.168.200.153. Si bien no es distinguido para esta fuente, dada su cercanía con el valor de entropía empezamos a sospechar que el nodo que corresponde a la dirección 192.168.200.240 podría tratarse de un router o algún artefacto de similares características, puesto que es un nodo distinguido para la fuente origen y parece ser muy pedido como IP destino.\\
 
 \indent El grafo obtenido:\\
-
+\begin{center}
 \includegraphics[scale=0.5,clip=true,trim=20 0 0 0]{graphics/laburomediano.pdf}
 
 \includegraphics[scale=0.3,clip=true,trim=20 0 0 0]{graphics/laburomediano153.pdf}
 
 \includegraphics[scale=0.3,clip=true,trim=20 0 0 0]{graphics/laburomediano254.pdf}
-
+\end{center}
 
 \indent Se observan que nuevamente las IP's 192.168.200.240 y 192.168.200.153 son las que son pedidas por mayor cantidad de nodos distintos (a pesar de que la 192.168.200.118 es la que más pedido totales tuvo), aunque en este caso se observa también la IP 0.0.0.0, que como mencionamos anteriormente responde a una técnica que se aplica para detectar direcciones duplicadas.\\
 
-\indent Finalmente, las entropías calculadas:\\
-
-\begin{centering}
-	\begin{tabular}{ | c | c | c |} \hline
-	   & \textbf{$S_{src}$} & \textbf{$S_{dst}$} \\ \hline
-	  	\textbf{Entropía} & 3,54 bits & 3,43 bits \\ \hline
-	\end{tabular}
-\end{centering}\\
-
-
-\indent Creemos que el aumento en las valores de las entropías se corresponde con el hecho de la aparición de una mayor cantidad de direcciones IP's, que al aparecer en pocas oportunidades en las fuentes proveen más información.\\
 
 
 \subsubsection{Todos los paquetes ARP who-has capturados (Muestra grande)}
 
-\indent \indent Al igual que en los dos subcasos anteriores, exponemos los gráficos que obtuvimos.\\
-\indent Para la fuente origen:\\
+\indent \indent Para este caso de estudio se obtuvieron los siguientes valores de entropía para las fuentes:\\
 
-
-\includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_grande_src.png}
-
-\indent Se puede observar de nuevo la predominancia de la IP 192.168.200.100, seguida nuevamente por la 192.168.200.240, aunque ahora aparecen nuevas direcciones como la 192.168.200.156.
-
-\indent Análogamente para la fuente destino:\\
-
-\includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_grande_dst.png}
-
-
-\indent Aquí se vuelve a observar la predominancia de las IP's 192.168.200.118, 192.168.200.240 y 182.168.200.153, al igual que en los casos anteriores.\\
-
-\indent Recordamos que debido a la gran cantidad de direcciones que entran en juego en este subcaso, no se provee un grafo de la red.\\
-
-\indent Finalmente, los valores de entropía calculados:\\
-
-\begin{centering}
+\begin{center}
 	\begin{tabular}{ | c | c | c |} \hline
 	   & \textbf{$S_{src}$} & \textbf{$S_{dst}$} \\ \hline
 	  	\textbf{Entropía} & 3,67 bits & 4,07 bits \\ \hline
 	\end{tabular}
-\end{centering}\\
+\end{center}
 
-\indent Nuevamente, creemos que los valores de entropía aumentan al incrementarse el número de direcciones que entran en juego en las capturas y que no aparecen en grandes cantidad ni en la fuente destino ni en la origen, aportando, cuando aparecen un gran valor de información.\\
 
+\indent Como mencionamos anteriorermente, creemos que los valores de entropía aumentan al incrementarse el número de direcciones que entran en juego en las capturas y que no aparecen en grandes cantidad ni en la fuente destino ni en la origen, aportando, cuando aparecen un gran valor de información.\\
+
+\indent Para la fuente origen se confeccionó el siguiente gráfico con los datos obtenidos:\\
+
+\begin{center}
+\includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_grande_src.png}
+\end{center}
+
+\indent Al igual que en el caso anterior, se puede determinar que los nodos distinguidos de esta fuente son los símbolos que responden a la IP 192.168.200.100 y a la 192.168.200.240, puesto que son los únicos dos cuyo valor de información está por debajo de la entropía.\\
+
+\indent Análogamente para la fuente destino:\\
+
+\begin{center}
+\includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_grande_dst.png}
+\end{center}
+
+\indent Aquí se vuelve a observar como distinguidas a las IP's 192.168.200.118, y 182.168.200.153, aunque queremos destacar también a la IP 192.168.200.240. Si bien no cumple con el criterio que suponemos es necesario para ser considerado un nodo distinguido de la fuente destino, su cercano valor a la entropía de la fuente sumado a que efectivamente se trata un símbolo distinguido para la fuente origen nos hace pensar que estamos frente a un nodo que tiene una gran relevancia para la red en la que se realizó la captura.\\
+
+\indent Recordamos que debido a la gran cantidad de direcciones que entran en juego en este subcaso, no se provee un grafo de la red.\\
 
 \subsubsection{Sobre las direcciones 192.168.200.153 y 192.168.200.240}
 
-\indent Teniendo conocimiento del ámbito dónde se realizó la captura, creemos que una de las dos direcciones, la 192.168.200.240, se corresponde con un router o simil, puesto que no sólo es recipiente de gran cantidad de pedidos sino que también envía muchas respuestas.\\
+\indent \indent Teniendo conocimiento del ámbito dónde se realizó la captura, creemos que una de las dos direcciones, la 192.168.200.240, se corresponde con un router o simil, puesto que no sólo es recipiente de gran cantidad de pedidos sino que también envía muchas respuestas.\\
 \indent Creemos que la dirección 192.168.200.153 se corresponde con un servidor local que se utiliza en el ámbito laboral y donde se aloja un motor de base de datos que se utiliza constantemente con las labores de Software Factory de la empresa, tanto en las áreas de desarrollo como de testeo.\\
+
+\newpage
 
 \subsection{Caso de estudio: Red de la facultad}
 
