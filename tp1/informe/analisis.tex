@@ -2,54 +2,50 @@
 
 \subsection{Caso de estudio: Red laboral}
 
-Antes de analizar la captura sosteníamos como hipótesis que la topología de los mensajes ``tendría forma de árbol'' con el router en su raíz y tantas hojas como hosts dentro de la red, con poco o nada de interacción entre ellos.\newline
-
-También suponíamos que la mayoría de las redes \textit{subneteadas} con un router tendrían necesariamente esta forma.\newline
-
-En este caso estudiamos la red de una oficina con alrededor de 40 computadoras y teléfonos celulares.\newline
-
-La captura duró alrededor de seis horas con más de 90000 mensajes ARP who-has. Con este volumen de datos fue necesario seccionar el análisis bajo diferentes criterios, como la cantidad de mensajes o una cantidad mínima de mensajes entre nodos.\newline
-
-Los grafos presentados a continuación muestran direcciones IP como nodos unidos por un eje si el nodo origen realizó un broadcast ARP who-has buscando al nodo destino.\newline
-
-Para empezar, mostramos los primeros 10 mil requests entre los nodos que se enviaron diez o más mensajes. Elegimos esta parte de la muestra tras haber visto que graficar más nodos agrega poca información nueva respecto de los nodos más relevantes.\newline
+\indent \indent Antes de analizar la captura sosteníamos como hipótesis que la topología de los mensajes ``tendría forma de árbol'' con el router en su raíz y tantas hojas como hosts dentro de la red, con poco o nada de interacción entre ellos.\\
+\indent También suponíamos que la mayoría de las redes \textit{subneteadas} con un router tendrían necesariamente esta forma.\\
+\indent En este caso estudiamos la red de una oficina con alrededor de 40 computadoras y teléfonos celulares.\\
+\indent La captura duró alrededor de seis horas y se compone de más de noventa mil mensajes ARP who-has. Con este volumen de datos fue necesario seccionar el análisis bajo diferentes criterios, como la cantidad de mensajes o una cantidad mínima de mensajes entre nodos.\\
+\indent Los grafos presentados a continuación muestran direcciones IP como nodos unidos por un eje si el nodo origen realizó un broadcast ARP who-has buscando al nodo destino.\\
+\indent Para empezar, mostramos los primeros diez mil requests entre los nodos que se enviaron diez o más mensajes. Elegimos esta parte de la muestra tras haber visto que graficar más nodos agrega poca información nueva respecto de los nodos más relevantes.\\
 
 \includegraphics[scale=0.25,angle=90]{graphics/t-work-10000c-10w.png}
 
-A primera vista notamos que hay ciertos nodos que resaltan sobre los demás como el 192.168.0.1 (router), o 192.168.0.126. Si bien la estructura de este digrafo no es un árbol, se nota que hay cierta jerarquía.\newline
+\indent A primera vista notamos que hay ciertos nodos que resaltan sobre los demás como el 192.168.0.1 (router), o 192.168.0.126. Si bien la estructura de este digrafo no es un árbol, se nota que hay cierta jerarquía.\\
+\indent Un nodo interesante que resalta es el 169.254.255.255, porque es la única IP no privada que aparece en la red. Analizando este caso en particular, vemos que siempre es buscado por nodos de la red (y éste nunca busca a nadie), lo que nos hace suponer que puede tratarse de un servicio, como un servidor de DNS.\\
 
-Un nodo interesante que resalta es el 169.254.255.255, porque es la única IP no privada que aparece en la red. Analizando este caso en particular, vemos que siempre es buscado por nodos de la red (y éste nunca busca a nadie), lo que nos hace suponer que puede tratarse de un servicio, como un servidor de DNS.\newline
+\includegraphics[scale=0.25,clip=true,trim=700 0 720 0]{graphics/t-work-ip-169-254-255-255.png}
 
-\includegraphics[scale=0.25,clip=true,trim=850 0 870 0]{graphics/t-work-ip-169-254-255-255.png}
-
-Investigando el resto de la captura, notamos que los demás paquetes que recibe son del protocolo NetBIOS Name Service, con lo que podemos afirmar que en este nodo funciona un NetBIOS Server.\newline
-
-Para poder reconocer mejor cuáles son los nodos más importantes de la red veamos el siguiente grafo, donde se estudia toda la muestra pero sólo nos quedamos con aquellos nodos que compartieron más de mil mensajes.\newline
+\indent Investigando el resto de la captura, notamos que los demás paquetes que recibe son del protocolo NetBIOS Name Service, con lo que podemos afirmar que en este nodo funciona un NetBIOS Server.\\
+\indent Para poder reconocer mejor cuáles son los nodos más importantes de la red veamos el siguiente grafo, donde se estudia toda la muestra pero sólo nos quedamos con aquellos nodos que compartieron más de mil mensajes.\newline
 
 \includegraphics[scale=0.30]{graphics/t-work-all-1000w.png}
 
-Viendo los mensajes ARP de esta manera podemos notar varias cosas. Por un lado que tiene forma de árbol, pero el nodo raíz no es el router, como suponíamos originalmente. Vemos que hay muchos requests ARP que tienen origen en el 0.0.0.0 y como destino diversos nodos de la red, pero ésta no es una IP del rango privado.\newline
-
-Este primer hecho nos llevó a conocer que un ARP con origen 0.0.0.0 es parte de una técnica para detectar direcciones IP duplicadas dentro de una red. En este caso, se estaba queriendo detectar si las direcciones terminadas en 51, 56, 68, 76 ó 164 estaban duplicadas.\newline
+\indent Viendo los mensajes ARP de esta manera podemos notar varias cosas. Por un lado que tiene forma de árbol, pero el nodo raíz no es el router, como suponíamos originalmente. Vemos que hay muchos requests ARP que tienen origen en el 0.0.0.0 y como destino diversos nodos de la red, pero ésta no es una IP del rango privado.\\
+\indent Este primer hecho nos llevó a conocer que un ARP con origen 0.0.0.0 es parte de una técnica para detectar direcciones IP duplicadas dentro de una red. En este caso, se estaba queriendo detectar si las direcciones terminadas en 51, 56, 68, 76 ó 164 estaban duplicadas.\\
 
 \newpage
 
-También nos pareció relevante analizar el router en particular.\newline
+\indent También nos pareció relevante analizar el router en particular.\\
 
 \includegraphics[scale=0.3]{graphics/t-work-router-1000w.png}
 
-Vemos que resulta interesante la gran cantidad de veces que se solicita la IP 192.168.0.193. Para saber más sobre lo que podría estar sucediendo con ese host, revisamos el resto de la captura pero encontramos que no había ningún paquete con esa dirección origen ni destino.\newline
-
-Por esto creemos que podría tratarse de un nodo mal configurado, buscando una IP que ya no existe en la red, lo cual parece en consonancia con la gran cantidad de pedidos ARP que el router le hace.\newline
+\indent Vemos que resulta interesante la gran cantidad de veces que se solicita la IP 192.168.0.193. Para saber más sobre lo que podría estar sucediendo con ese host, revisamos el resto de la captura pero encontramos que no había ningún paquete con esa dirección origen ni destino.\\
+\indent Por esto creemos que podría tratarse de un nodo mal configurado, buscando una IP que ya no existe en la red, lo cual parece en consonancia con la gran cantidad de pedidos ARP que el router le hace.\\
 
 \subsubsection{Detección de nodos significativos}
 
-Nos interesa poder detectar de manera automática nodos significativos midiendo la \textit{información} contra la \textit{entropía} de la fuente como explicamos en la sección \textit{desarrollo}.\newline
+%Nos interesa poder detectar de manera automática nodos significativos midiendo la \textit{información} contra la \textit{entropía} de la fuente como explicamos en la sección \textit{desarrollo}.\newline
 
-Calculamos la entropía de las fuentes origen y destino: 3.44 y 4.65, respectivamente.\newline
+\indent \indent Siguiendo el método indicado en la sección \textbf{Desarrollo}, calculamos la entropía de las fuentes y la información de los símbolos de cada una, para poder contrastarlos.\\
+\indent Con los datos obtenidos, se confeccionaron los siguientes gráficos:\\
 
-Luego indentificamos las IP con \textit{información} menor a la \textit{entropía} en cada una de las fuentes:\newline
+\includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/tonchis_src.png}
 
+\includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/tonchis_dst.png}
+
+\indent Más en detalle, los datos de los nodos que consideramos distinguidos son:\\
+\begin{center}
 \begin{tabular}{c c}
 \begin{tabular}{ | c | c  | }
 	\hline
@@ -73,9 +69,8 @@ Luego indentificamos las IP con \textit{información} menor a la \textit{entrop�
 	192.168.0.195  & 3.00 \\
 	\hline
 \end{tabular}
-\\
 \end{tabular}
-\newline
+\end{center}
 
 Con estos nuevos datos, recordemos el gráfico con los nodos que comparten más de mil mensajes:\newline
 
@@ -88,7 +83,7 @@ Vemos cómo los dos nodos que menos \textit{información} nos proveen son los qu
 \indent \indent  En este segundo caso de estudio, se estudió la red de las oficinas donde trabaja otro de los integrantes del grupo. La captura de datos se realizó por el lapso de dos horas, en modo promiscuo y en un host conectado por cable Ethernet a la red, en contraposición con el caso anterior.\\
 \indent Dada la enorme cantidad de datos y, además, para analizar un poco la progresión de la captura, se consideraron tres casos.\\
 \indent El primer caso corresponde a los primeros mil paquetes ARP who-has que se capturaron, y nos servirá como primera aproximación. Como caso intermedio, estudiamos luego los primeros seis mil paquetes ARP who-has, que se corresponden aproximadamente con la mitad de los paquetes de dicho tipo capturados a lo largo del experimento. Finalmente, se estudió el caso con todos los paquetes ARP who-has capturados.\\
-\indent En los tres casos se calcularon las entropías de las fuentes \textit{Fuente} y \textit{Destino}, y además se proveen gráficos de barras con la información calculada por IP para las IPs que menos información suministran. Esto último se hizo con el fin de facilitar la lectura de los gŕaficos. En tales gŕaficos su puede observar también una recta que representa la entropía de la fuente.\\
+\indent En los tres casos se calcularon las entropías de las fuentes \textit{Fuente} y \textit{Destino}, y además se confeccionarion gráficos de barras con la información calculada por IP para las IPs que menos información suministran. Esto último se hizo con el fin de facilitar la lectura de los gŕaficos. En tales gŕaficos su puede observar también una recta que representa la entropía de la fuente.\\
 \indent Es oportuno mencionar también que se proveen grafos dirigidos donde el nodo origen corresponde a la IP que pidió a la IP representada por el nodo destino para los primeros dos subcasos de estudio, pero no para el tercero. La sencilla razón es que la gran cantidad de nodos provoca que el grafo sea, a efectos prácticos, ilegible.\\
 %\indent Sobre los gŕaficos deseamos hacer un comentario más: si bien los calculamos basados en la cantidad de apariciones de la IP en la correspondiente fuente, es claro que dado lo mencionado en la introducción acerca de que un evento con mayor probabilidad provee menos información, los gráficos que hicimos inducen lo mismo que si en el eje \textit{y} considerásemos el valor numérico de la información de la IP, aunque en ese caso, los histogramas serían \textit{al revés}, en el sentido de que las IP's que aparecen con barras pequeñas en nuestros gráficos lo harían con barras grandes si midiésemos por la infomación que suministra.\\
 
