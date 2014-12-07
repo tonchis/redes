@@ -23,24 +23,24 @@
 \begin{tabular}{c c}
 \begin{tabular}{ | c | c  | }
 	\hline
-	Entropía origen & 3.44 \\
+	Entropía origen & 3.44 bits\\
 	\hline
 	IP                      & Información \\
 	\hline
-	192.168.0.1     & 1.41 \\
-	0.0.0.0 		     & 3.21 \\
+	192.168.0.1     & 1.41 bits\\
+	0.0.0.0 		     & 3.21 bits\\
 	\hline
 \end{tabular}
 &
 \begin{tabular}{ | c | c  | }
 	\hline
-	Entropía destino & 4.65 \\
+	Entropía destino & 4.65 bits\\
 	\hline
 	IP 		                  & Información \\
 	\hline
-	192.168.0.193  & 2.09 \\
-	192.168.0.1      & 2.48 \\
-	192.168.0.195  & 3.00 \\
+	192.168.0.193  & 2.09 bist\\
+	192.168.0.1      & 2.48 bist\\
+	192.168.0.195  & 3.00 bist\\
 	\hline
 \end{tabular}
 \end{tabular}
@@ -77,7 +77,7 @@
 \indent Viendo los mensajes ARP de esta manera en ambos grafos podemos notar varias cosas. Por un lado que tiene forma de árbol, pero el nodo raíz no es el router, como suponíamos originalmente. Vemos que en concordancia con nuestra consideración de nodo distinguido para la fuente origen, hay muchos requests ARP que tienen origen en el 0.0.0.0 y como destino diversos nodos de la red, aunque ésta no es una IP del rango privado.\\
 \indent Este nos llevó a investigar y conocer que un ARP con origen 0.0.0.0 es parte de una técnica para detectar direcciones IP duplicadas dentro de una red. En este caso, se estaba queriendo detectar si las direcciones terminadas en 51, 56, 68, 76 ó 164 estaban duplicadas.\\
 \indent Es notable la gran cantidad de pedidos que recibe la IP 192.168.0.195, otro de los nodos que distinguimos con nuestro criterio.\\
-\indent De estos grafos se extrae además que dos de los nodos que consideramos distinguidos son los que más \textit{request ARP} intercambian, ocurriendo que  192.168.0.1 busca a 192.168.0.193 21301 veces. Estos gráficos parecen confirmar la efectividad del criterio, puesto que nos permite establecer la correspondencia del nodo 192.168.0.1 como  distinguido para la fuente origen, y el 192.168.0.193 como distinguido para la fuente destino.\\
+\indent De estos grafos se extrae además que dos de los nodos que consideramos distinguidos son los que más \textit{request ARP} intercambian, ocurriendo que  192.168.0.1 busca a 192.168.0.193 21301 veces. Estos gráficos parecen confirmar la efectividad del criterio (distinguir aquellos nodos cuya información contenida es menor a la entropía de la fuente), puesto que nos permite establecer la correspondencia del nodo 192.168.0.1 como  distinguido para la fuente origen, y el 192.168.0.193 como distinguido para la fuente destino.\\
 \indent El grafo enfocado en el router nos permite además verificar que en efecto la dirección 192.168.0.1 es un nodo distinguido para la fuente destino.\\
 \indent Nos resultó interesante la gran cantidad de veces que se pide la IP 192.168.0.193 y el porqué de que podamos considerarlo un nodo distinguido. Para saber más sobre lo que podría estar sucediendo con ese host, revisamos el resto de la captura pero encontramos que no había ningún paquete con esa dirección origen ni destino.\\
 \indent Por esto creemos que podría tratarse de un nodo mal configurado, buscando el router una IP que ya no existe en la red, lo cual parece en consonancia con la gran cantidad de pedidos ARP que le hace.\\
@@ -250,7 +250,7 @@
 \includegraphics[scale=0.5,clip=true,trim=140 0 0 0]{graphics/toda_la_red.png}
 \end{center}
 \newpage
-\indent Por supuesto, este gráfico no parece indicarnos nada a esta escala. Por ello,
+\indent Por supuesto, este gráfico no parece indicarnos nada a esta escala.\\
 \indent Si nos acercamos a algunos de los que catalogamos distinguidos, como el nodo 0.0.0.0 del que salen muchos pedidos y no llega ninguno (en sintonía con el análisis realizado que determinaba que era un nodo distinguido para la fuente origen), y el que suponemos es un router (10.2.100.254) del que salen y llegan muchos pedidos, justificando su aparición como nodo distinguido en ambas fuentes:\\
 
 \begin{center}
@@ -266,7 +266,7 @@
 
 \includegraphics[scale=0.5,clip=true,trim=140 0 0 0]{graphics/subnet_1.png}
 
-\indent Es interesante notar que las IP's 10.2.1.130, 10.2.1.149 y 10.2.1.254 parecen relevantes viendo el gráfico siendo receptores de muchos pedidos, lo cual se condice con el hecho de que sean nodos distinguidos para la fuente destino.. Además se observa que muchas de los nodos que distinguimos para la fuente origen aparecen como fuente en paquetes ARP que contiene como dirección destino a las tres IP's mencionadas.\\
+\indent Es interesante notar que las IP's 10.2.1.130, 10.2.1.149 y 10.2.1.254 parecen relevantes viendo el gráfico siendo receptores de muchos pedidos, lo cual se condice con el hecho de que sean nodos distinguidos para la fuente destino. Además se observa que muchas de los nodos que distinguimos para la fuente origen aparecen como fuente en paquetes ARP que contiene como dirección destino a las tres IP's mencionadas.\\
 
 
 \includegraphics[scale=0.5,clip=true,trim=140 0 0 0]{graphics/subnet_5.png}
