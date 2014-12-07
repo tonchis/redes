@@ -211,33 +211,70 @@
 \subsection{Caso de estudio: Red de la facultad}
 
 \indent Finalmente, para tener un caso un poco distinto al de una red laboral, que puede ser algo pequeña, dependiendo de con que se la compare, tomamos muestra de la red de los laboratorios de la facultad (más específicamente, desde el laboratorio 4).\\
-\indent El approach del análisis es similar al anterior, por lo que vamos a comenzar con ciertas particularidades que notamos al mirar un poco los datos:
+\indent Vamos a comenzar mencionando ciertas particularidades que notamos al mirar un poco los datos:
 \begin{itemize}
-	\item Por los números de ip, se trata de una red clase A (dentro del rango 0.0.0.0 a 127.255.255.255).
-	\item A diferencia de lo usual, los que suponemos, son routers, tienen direcciones que terminan distinto a ``.1'' (por ejemplo: ``.254'' o ``.230''). Eso es configurable por el administrador de red, y según pudimos averiguar, aparte de estilarse tener los \textit{gateway} finalizando en ``.1'', también se suele guardar las primeras direcciones para nodos distinguidos como servidores o impresoras, dejando las últimas direcciones para gateways, como inferimos que sucede en este caso.
+	\item Por los números de las direcciones IP, se trata de una red clase A (dentro del rango 0.0.0.0 a 127.255.255.255).
+	\item A diferencia de lo usual, los que suponemos, son routers, tienen direcciones que terminan distinto a ``.1'' (por ejemplo: ``.254'' o ``.230''). Eso es configurable por el administrador de red, y según pudimos averiguar, aparte de estilarse tener los \textit{gateway} finalizando en ``.1'', también se suele guardar las primeras direcciones para nodos particulares como servidores o impresoras, dejando las últimas direcciones para gateways, como inferimos que sucede en este caso.
 \end{itemize}
-\indent Para no repetir el análisis granular similar al punto anterior, vamos a trabajar con la muestra grande (todos los paquetes), informando que el único cambio que vale la pena notar es que en los tres tamaños de muestra, si bien los nodos que vemos como distinguidos, son los mismos, no siempre el más solicitado o el que más pedidos hace, es el mismo. Es decir, en una muestra arbitraria de 1000 paquetes puede que un nodo sea el más pedido, pero cuando agrandamos la muestra a 6000 o todos los paquetes muestreados, el resultado puede cambiar. Esto se ve en los siguientes gráficos:
+\indent Para no repetir el análisis granular similar al punto anterior, vamos a trabajar con la muestra grande, que se corresponde con todos los paquetes capturados.
 
-\includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/facultad_mediana_dst.png}
+\indent Las entropías calculadas para ambas fuentes son:\\
+
+\begin{center}
+	\begin{tabular}{ | c | c | c |} \hline
+	   & \textbf{$S_{src}$} & \textbf{$S_{dst}$} \\ \hline
+	  	\textbf{Entropía} & 6,29 bits & 5,40 bits \\ \hline
+	\end{tabular}
+\end{center}
+
+\indent Como en los análisis anteriores, se realizaron gráficos de barras con la información contenida en los símbolos de las fuente con una recta que representa la entropía de la fuente para contrastar. Recordamos que solamente mostramos en los gráficos los símbolos con menor información, es decir aquellos que son suficientes para realizar el análisis pertinente.\\
+
+\indent Para la fuente \textit{Fuente}, se obtuvo el siguiente gráfico:\\
+
+\begin{center}
+\includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/facultad_grande_src.png}
+\end{center}
+
+\indent En contraste con los casos de estudio anteriores, parecería que aquí una mayor cantidad de nodos cumplen con el criterio que establecimos para ser considerados como nodos distinguidos. El que menos información contiene es la IP 10.2.100.254.\\
+
+\indent Para la fuente destino:\\
+\begin{center}
 \includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/facultad_grande_dst.png}
+\end{center}
+\indent Se pueden observar claramente cuatro IPs que podríamos considerar distinguidas y una, la 169.254.255.255 con un valor muy similar a la entropía de la fuente.\\
 
-\indent Concentrándonos entonces en la muestra grande, intentamos trazar un paralelísmo entre la importancia de ciertas ips en el histograma y los nodos distinguidos del grafo. Logramos ver que efectivamente hay una relación, y los nodos que sobresalen en los histogramas son los que más flechas tienen (desde o hacia ellos, según corresponda) en los grafos.\\
+\indent Concentrándonos en estos candidatos de nodos distinguidos, analizamos el grafo dirigido que representa la captura con el fin de determinar si los resultados se verifican gráficamente como nodos relevantes. Logramos ver que efectivamente hay una relación, y los nodos que sobresalen en los gráficos. son los que más flechas tienen (desde o hacia ellos, según corresponda) en los grafos.\\
 \\
 \indent Esta sería toda la red:\\
+\begin{center}
 \includegraphics[scale=0.5,clip=true,trim=140 0 0 0]{graphics/toda_la_red.png}
-
+\end{center}
 \newpage
-\indent Si nos acercamos a los más distinguidos, serían estos 2: el nodo 0.0.0.0 del que salen muchos pedidos y no llega ninguno, y el que suponemos es un router (10.2.100.254) del que salen y llegan muchos pedidos.\\
+\indent Por supuesto, este gráfico no parece indicarnos nada a esta escala. Por ello,
+\indent Si nos acercamos a algunos de los que catalogamos distinguidos, como el nodo 0.0.0.0 del que salen muchos pedidos y no llega ninguno (en sintonía con el análisis realizado que determinaba que era un nodo distinguido para la fuente origen), y el que suponemos es un router (10.2.100.254) del que salen y llegan muchos pedidos, justificando su aparición como nodo distinguido en ambas fuentes:\\
 
+\begin{center}
 \includegraphics[scale=0.5,clip=true,trim=140 0 0 0]{graphics/distinguidos.png}
 
 \includegraphics[scale=0.3,clip=true,trim=140 0 0 0]{graphics/distinguido_todos_ceros.png}
 
 \includegraphics[scale=0.3,clip=true,trim=140 0 0 0]{graphics/distinguido_router.png}
+\end{center}
 
 \newpage
 \indent Por último, queremos dejar sentada nuestra suposición respecto al subneteo y a las máscaras utilizadas. Según las características de las direcciones, nos parece correcto asumir que la máscara aplicada en esta red es una /16, dado que todas las direcciones privadas de la red comienzan en ``10.2''. A su vez, creemos que podemos inferir que el tercer número en la dirección indica una subred, y las 255 direcciones restantes son los identificadores únicos de cada máquina en dicha subred. Esto es respaldado por la forma que tienen las distintas partes del grafo que describe a la red. Estas serían algunas de las subredes:\\
 
 \includegraphics[scale=0.5,clip=true,trim=140 0 0 0]{graphics/subnet_1.png}
 
+\indent Es interesante notar que las IP's 10.2.1.130, 10.2.1.149 y 10.2.1.254 parecen relevantes viendo el gráfico siendo receptores de muchos pedidos, lo cual se condice con el hecho de que sean nodos distinguidos para la fuente destino.. Además se observa que muchas de los nodos que distinguimos para la fuente origen aparecen como fuente en paquetes ARP que contiene como dirección destino a las tres IP's mencionadas.\\
+
+
 \includegraphics[scale=0.5,clip=true,trim=140 0 0 0]{graphics/subnet_5.png}
+
+\indent Este último gráfico es a efectos de mostrar otra subred, aunque sus nodos no son relevantes de acuerdo al análisis que realizamos.\\
+
+
+\subsection{Conclusiones}
+
+\indent \indent Intuitivamente habíamos supuesto que los nodos distinguidos de cada fuente serían aquellos que más apariciones tuvieran, o equivalentemente aquellos que menos información contuvieran. Como criterio de comparación consideramos que un nodo sería distinguido si la información que contiene es menor a la entropía de la fuente, que es una medida de la información promedio de ésta.\\
+\indent En base a estos supuestos realizamos tres experimentaciones capturando paquetes en tres redes distintas. Con los datos obtenidos, se realizaron gráficos de información por IP en cada fuente comparándolas además con la entropía. Una vez obtenidos los candidatos a nodos distinguidos, contrastamos esta información con grafos dirigidos de las capturas, pudiendo verificar así que el criterio elegido resulta correcto para la determinación de nodos distinguidos tanto para la fuente destino como para la origen de cada experimento.\\ 
