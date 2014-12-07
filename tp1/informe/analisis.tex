@@ -78,29 +78,42 @@ Con estos nuevos datos, recordemos el gráfico con los nodos que comparten más 
 
 Vemos cómo los dos nodos que menos \textit{información} nos proveen son los que más \textit{request ARP} intercambian, 192.168.0.1 busca a 192.168.0.192 21301 veces. También se confirma que el router es uno de los nodos más requeridos de la red.\newline
 
+\newpage
 \subsection{Caso de estudio: Otra red laboral}
 
 \indent \indent  En este segundo caso de estudio, se estudió la red de las oficinas donde trabaja otro de los integrantes del grupo. La captura de datos se realizó por el lapso de dos horas, en modo promiscuo y en un host conectado por cable Ethernet a la red, en contraposición con el caso anterior.\\
 \indent Dada la enorme cantidad de datos y, además, para analizar un poco la progresión de la captura, se consideraron tres casos.\\
 \indent El primer caso corresponde a los primeros mil paquetes ARP who-has que se capturaron, y nos servirá como primera aproximación. Como caso intermedio, estudiamos luego los primeros seis mil paquetes ARP who-has, que se corresponden aproximadamente con la mitad de los paquetes de dicho tipo capturados a lo largo del experimento. Finalmente, se estudió el caso con todos los paquetes ARP who-has capturados.\\
-\indent En los tres casos se calcularon las entropías de las fuentes \textit{Fuente} y \textit{Destino}, y además se confeccionarion gráficos de barras con la información calculada por IP para las IPs que menos información suministran. Esto último se hizo con el fin de facilitar la lectura de los gŕaficos. En tales gŕaficos su puede observar también una recta que representa la entropía de la fuente.\\
-\indent Es oportuno mencionar también que se proveen grafos dirigidos donde el nodo origen corresponde a la IP que pidió a la IP representada por el nodo destino para los primeros dos subcasos de estudio, pero no para el tercero. La sencilla razón es que la gran cantidad de nodos provoca que el grafo sea, a efectos prácticos, ilegible.\\
+\indent En los tres casos se calcularon las entropías de las fuentes \textit{Fuente} y \textit{Destino}, y además se confeccionarion gráficos de barras con la información calculada por IP para las IPs que menos información suministran, que de acuerdo a lo que expresado en la sección \textbf{Desarrollo} son los candidatos a  nodos distinguidos. En tales gŕaficos su puede observar también una recta que representa la entropía de la fuente y que servirá para contrastar visualmente la información de los símbolos con la entropía.\\
+\indent Es oportuno mencionar también que se proveen grafos dirigidos donde el nodo origen corresponde a la IP que pidió a la IP representada por el nodo destino para los primeros dos subcasos de estudio, pero no para el tercero. La sencilla razón es que la gran cantidad de nodos provoca que el grafo sea, a efectos prácticos, ilegible. Estos digrafos los usaremos para confirmar visualmente el estudio realizado.\\
 %\indent Sobre los gŕaficos deseamos hacer un comentario más: si bien los calculamos basados en la cantidad de apariciones de la IP en la correspondiente fuente, es claro que dado lo mencionado en la introducción acerca de que un evento con mayor probabilidad provee menos información, los gráficos que hicimos inducen lo mismo que si en el eje \textit{y} considerásemos el valor numérico de la información de la IP, aunque en ese caso, los histogramas serían \textit{al revés}, en el sentido de que las IP's que aparecen con barras pequeñas en nuestros gráficos lo harían con barras grandes si midiésemos por la infomación que suministra.\\
 
 \subsubsection{Primeros mil paquetes ARP who-has (Muestra chica)}
 
-\indent \indent Analizando las direcciones IPs que más pedidos hicieron, se obtuvo el siguiente histograma, que representa la información calculada por IP.
+\indent En base a la experimentación realizada, se obtuvieron los siguientes valores de entropía para las fuentes \textit{Fuente} y \textit{Destino}.\\
+
+\begin{center}
+	\begin{tabular}{ | c | c | c |} \hline
+	   & \textbf{$S_{src}$} & \textbf{$S_{dst}$} \\ \hline
+	  	\textbf{Entropía} & 3,08 bits & 2,75 bits\\ \hline
+	\end{tabular}
+\end{center}
+
+\indent \indent Analizando las IP's que contienen menos información se obtuvo el siguiente gráfico de barras, que representa la información calculada por IP para la fuente \textit{Fuente}. La recta azul representa la entropía de dicha fuente.\\
+
 
 \includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_chica_src.png}
 
+\indent De este gráfico se puede extraer que, siguiendo el criterio que mencionamos en secciones anteriores, el nodo que consideramos distinguido para esta fuente es la IPs 192.168.200.100, que, se entiende, es la que mayor cantidad de pedidos realiza.
 
 %\indent Es de notar que para el gráfico anterior se consideraron IP's con más de cinco pedidos\ realizados. Se observa claramente que la IP 192.168.200.100 realiza la mayor cantidad de pedidos, seguido de lejos por las direcciones 192.168.200.240 y la 192.168.200.86. Se extrae de aquí, entonces, que estas IP's son los símbolos que menor valor aportan a la entropía de la fuente.\\
 
-\indent Para la fuente destino, se obtuvo el siguiente histograma:
+\indent Para la fuente destino, se obtuvo el siguiente gráfico:
 
 \includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_chica_dst.png}
 
-
+\indent Aquí se observa que el único símbolo cuya información es menor a la entropía es la IP 192.168.200.118, siendo así el nodo que determinamos como distinguido. Equivalentemente se lo puede pensar como el nodo que más ha sido pedido.\\
+\indent Mencionamos también para este caso las direcciones IPs 192.168.200.153 y 192.168.200.240, que si bien no cumplen con el criterio establecido para considerarlos distinguidos tendrán más relevancia a medida que se consideren más paquetes de la captura.\\
 %\indent Aquí se observa que los símbolos que son más pedidos y que por lo tanto menos aportan al valor de la entropía de la fuente destino son, principalmente, la dirección 192.168.200.118 seguido de lejos por la 192.168.200.153 y finalmente la 192.168.200.240. Estas dos últimas direcciones serán más relevantes a medida que se aumentan la cantida de paquetes en consideración. Es notable además que en el anterior gráfico se consideraron todas las IP's que aparieron como destino en los paquetes ARP who-has.\\
 
 \indent A continuación se provee el grafo que se obtuvo para esto subcaso de estudio:\\
@@ -108,16 +121,7 @@ Vemos cómo los dos nodos que menos \textit{información} nos proveen son los qu
 \includegraphics[scale=0.7,clip=true,trim=140 0 0 0]{graphics/laburochico.pdf}
 
 
-\indent Dado que el grafo no posee peso en sus aristas pero analizándolo en conjunción con los histogramas anteriores, se puede observar que aunque la dirección 192.168.200.118 fue la más pedida en cantidad de pedidos totales, las IP's 192.168.200.240 y 192.168.200.153 fueron pedidas por una mayor cantidad de host distintos, por lo cual creemos que tienen más relevancia en la red.\\
-
-\indent Finalmente las entropías que se calcularon para las fuentes {$S_{src}$} y $S_{dst}$ son:\\
-
-\begin{centering}
-	\begin{tabular}{ | c | c | c |} \hline
-	   & \textbf{$S_{src}$} & \textbf{$S_{dst}$} \\ \hline
-	  	\textbf{Entropía} & 3,08 bits & 2,75 bits\\ \hline
-	\end{tabular}
-\end{centering}
+\indent Dado que el grafo no posee peso en sus aristas pero analizándolo en conjunción con los gráficos anteriores, se puede observar que aunque la dirección 192.168.200.118 fue la más pedida en cantidad de pedidos totales, las IP's 192.168.200.240 y 192.168.200.153 fueron pedidas por una mayor cantidad de hosts distintos, por lo cual creemos que tienen más relevancia en la red.\\
 
 
 \subsubsection{Primeros seis mil paquetes ARP who-has (Muestra mediana)}
