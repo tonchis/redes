@@ -88,25 +88,25 @@ Vemos cómo los dos nodos que menos \textit{información} nos proveen son los qu
 \indent \indent  En este segundo caso de estudio, se estudió la red de las oficinas donde trabaja otro de los integrantes del grupo. La captura de datos se realizó por el lapso de dos horas, en modo promiscuo y en un host conectado por cable Ethernet a la red, en contraposición con el caso anterior.\\
 \indent Dada la enorme cantidad de datos y, además, para analizar un poco la progresión de la captura, se consideraron tres casos.\\
 \indent El primer caso corresponde a los primeros mil paquetes ARP who-has que se capturaron, y nos servirá como primera aproximación. Como caso intermedio, estudiamos luego los primeros seis mil paquetes ARP who-has, que se corresponden aproximadamente con la mitad de los paquetes de dicho tipo capturados a lo largo del experimento. Finalmente, se estudió el caso con todos los paquetes ARP who-has capturados.\\
-\indent En los tres casos se calcularon las entropías de las fuentes \textit{Fuente} y \textit{Destino}, y además se proveen histogramas que muestran las direcciones IP que mayor cantidad de pedidos hicieron y las que más fueron pedidas respectivamente. Sin embargo, hemos de aclarar que, para facilitar la visualización, en dichos histogramas se ignoran arbitrariamente IPs que no cumplen con cierta cantidad de apariciones en cada fuente, pudiendo de esta manera analizar más concisamente dichas IP.\\
+\indent En los tres casos se calcularon las entropías de las fuentes \textit{Fuente} y \textit{Destino}, y además se proveen gráficos de barras con la información calculada por IP para las IPs que menos información suministran. Esto último se hizo con el fin de facilitar la lectura de los gŕaficos. En tales gŕaficos su puede observar también una recta que representa la entropía de la fuente.\\
 \indent Es oportuno mencionar también que se proveen grafos dirigidos donde el nodo origen corresponde a la IP que pidió a la IP representada por el nodo destino para los primeros dos subcasos de estudio, pero no para el tercero. La sencilla razón es que la gran cantidad de nodos provoca que el grafo sea, a efectos prácticos, ilegible.\\
-\indent Sobre los histogramas deseamos hacer un comentario más: si bien los calculamos basados en la cantidad de apariciones de la IP en la correspondiente fuente, es claro que dado lo mencionado en la introducción acerca de que un evento con mayor probabilidad provee menos información, los gráficos que hicimos inducen lo mismo que si en el eje \textit{y} considerásemos el valor numérico de la información de la IP, aunque en ese caso, los histogramas serían \textit{al revés}, en el sentido de que las IP's que aparecen con barras pequeñas en nuestros gráficos lo harían con barras grandes si midiésemos por la infomación que suministra.\\
+%\indent Sobre los gŕaficos deseamos hacer un comentario más: si bien los calculamos basados en la cantidad de apariciones de la IP en la correspondiente fuente, es claro que dado lo mencionado en la introducción acerca de que un evento con mayor probabilidad provee menos información, los gráficos que hicimos inducen lo mismo que si en el eje \textit{y} considerásemos el valor numérico de la información de la IP, aunque en ese caso, los histogramas serían \textit{al revés}, en el sentido de que las IP's que aparecen con barras pequeñas en nuestros gráficos lo harían con barras grandes si midiésemos por la infomación que suministra.\\
 
 \subsubsection{Primeros mil paquetes ARP who-has (Muestra chica)}
 
-\indent \indent Analizando las direcciones IPs que más pedidos hicieron, se obtuvo el siguiente histograma, que representa a las IP's en función de la cantidad de apariciones.
+\indent \indent Analizando las direcciones IPs que más pedidos hicieron, se obtuvo el siguiente histograma, que representa la información calculada por IP.
 
-\includegraphics[scale=0.5,clip=true,trim=140 0 0 0]{graphics/laburochico_src.png}
+\includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_chica_src.png}
 
 
-\indent Es de notar que para el gráfico anterior se consideraron IP's con más de cinco pedidos\ realizados. Se observa claramente que la IP 192.168.200.100 realiza la mayor cantidad de pedidos, seguido de lejos por las direcciones 192.168.200.240 y la 192.168.200.86. Se extrae de aquí, entonces, que estas IP's son los símbolos que menor valor aportan a la entropía de la fuente.\\
+%\indent Es de notar que para el gráfico anterior se consideraron IP's con más de cinco pedidos\ realizados. Se observa claramente que la IP 192.168.200.100 realiza la mayor cantidad de pedidos, seguido de lejos por las direcciones 192.168.200.240 y la 192.168.200.86. Se extrae de aquí, entonces, que estas IP's son los símbolos que menor valor aportan a la entropía de la fuente.\\
 
 \indent Para la fuente destino, se obtuvo el siguiente histograma:
 
-\includegraphics[scale=0.5,clip=true,trim=140 0 0 0]{graphics/laburochico_dst.png}
+\includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_chica_dst.png}
 
 
-\indent Aquí se observa que los símbolos que son más pedidos y que por lo tanto menos aportan al valor de la entropía de la fuente destino son, principalmente, la dirección 192.168.200.118 seguido de lejos por la 192.168.200.153 y finalmente la 192.168.200.240. Estas dos últimas direcciones serán más relevantes a medida que se aumentan la cantida de paquetes en consideración. Es notable además que en el anterior gráfico se consideraron todas las IP's que aparieron como destino en los paquetes ARP who-has.\\
+%\indent Aquí se observa que los símbolos que son más pedidos y que por lo tanto menos aportan al valor de la entropía de la fuente destino son, principalmente, la dirección 192.168.200.118 seguido de lejos por la 192.168.200.153 y finalmente la 192.168.200.240. Estas dos últimas direcciones serán más relevantes a medida que se aumentan la cantida de paquetes en consideración. Es notable además que en el anterior gráfico se consideraron todas las IP's que aparieron como destino en los paquetes ARP who-has.\\
 
 \indent A continuación se provee el grafo que se obtuvo para esto subcaso de estudio:\\
 
@@ -120,7 +120,7 @@ Vemos cómo los dos nodos que menos \textit{información} nos proveen son los qu
 \begin{centering}
 	\begin{tabular}{ | c | c | c |} \hline
 	   & \textbf{$S_{src}$} & \textbf{$S_{dst}$} \\ \hline
-	  	\textbf{Entropía} & 3,0752970340992025 bits & 2,746565878682078 bits\\ \hline
+	  	\textbf{Entropía} & 3,08 bits & 2,75 bits\\ \hline
 	\end{tabular}
 \end{centering}
 
@@ -130,13 +130,13 @@ Vemos cómo los dos nodos que menos \textit{información} nos proveen son los qu
 \indent \indent Análogamente al subcaso anterior, mostramos los gráficos que obtuvimos.\\
 \indent Para la fuente origen:\\
 
-\includegraphics[scale=0.5,clip=true,trim=140 0 0 0]{graphics/laburomediano_src.png}
+\includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_mediana_src.png}
 
 \indent En este caso se consideraron IP's que realizaron más de 10 peticiones. Aquí sobresale claramente, al igual que en el subcaso anterior, la IP 192.168.200.100, seguida nuevamente por la dirección 192.168.200.240.\\
 
 \indent Sobre la fuente destino:\\
 
-\includegraphics[scale=0.5,clip=true,trim=140 0 0 0]{graphics/laburomediano_dst.png}
+\includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_mediana_dst.png}
 
 \indent  Se observan resultados similares al subcaso de los primeros 1000 paquetes ARP capturados. Aquí ya empezamos a sospechar que la dirección 192.168.200.240 podría tratar se un router o algún artefacto de similares características, puesto que es participe tanto de pedidos como de respuestas.\\
 
@@ -156,7 +156,7 @@ Vemos cómo los dos nodos que menos \textit{información} nos proveen son los qu
 \begin{centering}
 	\begin{tabular}{ | c | c | c |} \hline
 	   & \textbf{$S_{src}$} & \textbf{$S_{dst}$} \\ \hline
-	  	\textbf{Entropía} & 3,535443894743673 bits & 3,434469046688702 bits \\ \hline
+	  	\textbf{Entropía} & 3,54 bits & 3,43 bits \\ \hline
 	\end{tabular}
 \end{centering}\\
 
@@ -170,13 +170,13 @@ Vemos cómo los dos nodos que menos \textit{información} nos proveen son los qu
 \indent Para la fuente origen:\\
 
 
-\includegraphics[scale=0.5,clip=true,trim=140 0 0 0]{graphics/laburo_src.png}
+\includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_grande_src.png}
 
 \indent Se puede observar de nuevo la predominancia de la IP 192.168.200.100, seguida nuevamente por la 192.168.200.240, aunque ahora aparecen nuevas direcciones como la 192.168.200.156.
 
 \indent Análogamente para la fuente destino:\\
 
-\includegraphics[scale=0.5,clip=true,trim=140 0 0 0]{graphics/laburo_dst.png}
+\includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_grande_dst.png}
 
 
 \indent Aquí se vuelve a observar la predominancia de las IP's 192.168.200.118, 192.168.200.240 y 182.168.200.153, al igual que en los casos anteriores.\\
@@ -188,7 +188,7 @@ Vemos cómo los dos nodos que menos \textit{información} nos proveen son los qu
 \begin{centering}
 	\begin{tabular}{ | c | c | c |} \hline
 	   & \textbf{$S_{src}$} & \textbf{$S_{dst}$} \\ \hline
-	  	\textbf{Entropía} & 3,6701699086665643 bits & 4,071849302811437 bits \\ \hline
+	  	\textbf{Entropía} & 3,67 bits & 4,07 bits \\ \hline
 	\end{tabular}
 \end{centering}\\
 
@@ -210,8 +210,8 @@ Vemos cómo los dos nodos que menos \textit{información} nos proveen son los qu
 \end{itemize}
 \indent Para no repetir el análisis granular similar al punto anterior, vamos a trabajar con la muestra grande (todos los paquetes), informando que el único cambio que vale la pena notar es que en los tres tamaños de muestra, si bien los nodos que vemos como distinguidos, son los mismos, no siempre el más solicitado o el que más pedidos hace, es el mismo. Es decir, en una muestra arbitraria de 1000 paquetes puede que un nodo sea el más pedido, pero cuando agrandamos la muestra a 6000 o todos los paquetes muestreados, el resultado puede cambiar. Esto se ve en los siguientes gráficos:
 
-\includegraphics[scale=0.5,clip=true,trim=140 0 0 0]{graphics/facumediana_dst.png}
-\includegraphics[scale=0.5,clip=true,trim=140 0 0 0]{graphics/facultad_dst.png}
+\includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/facultad_mediana_dst.png}
+\includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/facultad_grande_dst.png}
 
 \indent Concentrándonos entonces en la muestra grande, intentamos trazar un paralelísmo entre la importancia de ciertas ips en el histograma y los nodos distinguidos del grafo. Logramos ver que efectivamente hay una relación, y los nodos que sobresalen en los histogramas son los que más flechas tienen (desde o hacia ellos, según corresponda) en los grafos.\\
 \\
