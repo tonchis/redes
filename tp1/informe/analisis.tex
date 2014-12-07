@@ -89,7 +89,7 @@
 \indent \indent  En este segundo caso de estudio, se estudió la red de las oficinas donde trabaja otro de los integrantes del grupo. La captura de datos se realizó por el lapso de dos horas, en modo promiscuo y en un host conectado por cable Ethernet a la red, en contraposición con el caso anterior.\\
 \indent Dada la enorme cantidad de datos y, además, para analizar un poco la progresión de la captura, se consideraron tres casos.\\
 \indent El primer caso corresponde a los primeros mil paquetes ARP who-has que se capturaron, y nos servirá como primera aproximación. Como caso intermedio, estudiamos luego los primeros seis mil paquetes ARP who-has, que se corresponden aproximadamente con la mitad de los paquetes de dicho tipo capturados a lo largo del experimento. Finalmente, se estudió el caso con todos los paquetes ARP who-has capturados.\\
-\indent En los tres casos se calcularon las entropías de las fuentes \textit{Fuente} y \textit{Destino}, y además se confeccionarion gráficos de barras con la información calculada por IP para las IPs que menos información suministran, que de acuerdo a lo que expresado en la sección \textbf{Desarrollo} son los candidatos a  nodos distinguidos. En tales gŕaficos su puede observar también una recta que representa la entropía de la fuente y que servirá para contrastar visualmente la información de los símbolos con la entropía.\\
+\indent En los tres casos se calcularon las entropías de las fuentes \textit{Fuente} y \textit{Destino}, y además se confeccionarion gráficos de barras con la información calculada por IP para las IPs que menos información suministran, que de acuerdo a lo que expresado en la sección \textbf{Desarrollo} son los candidatos a  nodos distinguidos. En tales gŕaficos se puede observar también una recta que representa la entropía de la fuente y que servirá para contrastar visualmente la información de los símbolos con la entropía.\\
 \indent Es oportuno mencionar también que se proveen grafos dirigidos donde el nodo origen corresponde a la IP que pidió a la IP representada por el nodo destino para los primeros dos subcasos de estudio, pero no para el tercero. La sencilla razón es que la gran cantidad de nodos provoca que el grafo sea, a efectos prácticos, ilegible. Estos digrafos los usaremos para confirmar visualmente el estudio realizado.\\
 %\indent Sobre los gŕaficos deseamos hacer un comentario más: si bien los calculamos basados en la cantidad de apariciones de la IP en la correspondiente fuente, es claro que dado lo mencionado en la introducción acerca de que un evento con mayor probabilidad provee menos información, los gráficos que hicimos inducen lo mismo que si en el eje \textit{y} considerásemos el valor numérico de la información de la IP, aunque en ese caso, los histogramas serían \textit{al revés}, en el sentido de que las IP's que aparecen con barras pequeñas en nuestros gráficos lo harían con barras grandes si midiésemos por la infomación que suministra.\\
 
@@ -109,7 +109,7 @@
 \begin{center}
 \includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_chica_src.png}
 \end{center}
-\indent De este gráfico se puede extraer que, siguiendo el criterio que mencionamos en secciones anteriores, el nodo que consideramos distinguido para esta fuente es la IPs 192.168.200.100, que, se entiende, es la que mayor cantidad de pedidos realiza.
+\indent De este gráfico se puede extraer que, siguiendo el criterio que mencionamos en secciones anteriores, el nodo que consideramos distinguido para esta fuente es la IP 192.168.200.100, que, se entiende, es la que mayor cantidad de pedidos realiza.
 
 %\indent Es de notar que para el gráfico anterior se consideraron IP's con más de cinco pedidos\ realizados. Se observa claramente que la IP 192.168.200.100 realiza la mayor cantidad de pedidos, seguido de lejos por las direcciones 192.168.200.240 y la 192.168.200.86. Se extrae de aquí, entonces, que estas IP's son los símbolos que menor valor aportan a la entropía de la fuente.\\
 
@@ -120,7 +120,7 @@
 \end{center}
 
 \indent Aquí se observa que el único símbolo cuya información es menor a la entropía es la IP 192.168.200.118, siendo así el nodo que determinamos como distinguido. Equivalentemente se lo puede pensar como el nodo que más ha sido pedido.\\
-\indent Mencionamos también para este caso las direcciones IPs 192.168.200.153 y 192.168.200.240, que si bien no cumplen con el criterio establecido para considerarlos distinguidos tendrán más relevancia a medida que se consideren más paquetes de la captura.\\
+\indent Mencionamos también para este caso las direcciones IP 192.168.200.153 y 192.168.200.240, que si bien no cumplen con el criterio establecido para considerarlos distinguidos tendrán más relevancia a medida que se consideren más paquetes de la captura.\\
 %\indent Aquí se observa que los símbolos que son más pedidos y que por lo tanto menos aportan al valor de la entropía de la fuente destino son, principalmente, la dirección 192.168.200.118 seguido de lejos por la 192.168.200.153 y finalmente la 192.168.200.240. Estas dos últimas direcciones serán más relevantes a medida que se aumentan la cantida de paquetes en consideración. Es notable además que en el anterior gráfico se consideraron todas las IP's que aparieron como destino en los paquetes ARP who-has.\\
 
 \indent A continuación se provee el grafo que se obtuvo para esto subcaso de estudio:\\
@@ -141,7 +141,7 @@
 	\end{tabular}
 \end{center}
 
-\indent Creemos que el aumento en las valores de las entropías se corresponde con el hecho de la aparición de una mayor cantidad de direcciones IP's, que al aparecer en pocas oportunidades en las fuentes proveen más información.\\
+\indent Creemos que el aumento en las valores de las entropías se corresponde con el hecho de la aparición de una mayor cantidad de direcciones IP, que al aparecer en pocas oportunidades en las fuentes proveen más información.\\
 \indent Para la fuente origen, se obtuvo el siguiente gŕafico:\\
 \begin{center}
 \includegraphics[scale=0.5,clip=true,trim=100 0 0 0]{graphics/laburo_mediana_src.png}
@@ -165,7 +165,7 @@
 \includegraphics[scale=0.3,clip=true,trim=20 0 0 0]{graphics/laburomediano254.pdf}
 \end{center}
 
-\indent Se observan que nuevamente las IP's 192.168.200.240 y 192.168.200.153 son las que son pedidas por mayor cantidad de nodos distintos (a pesar de que la 192.168.200.118 es la que más pedido totales tuvo), aunque en este caso se observa también la IP 0.0.0.0, que como mencionamos anteriormente responde a una técnica que se aplica para detectar direcciones duplicadas.\\
+\indent Se observan que nuevamente las IP's 192.168.200.240 y 192.168.200.153 son las que son pedidas por mayor cantidad de nodos distintos (a pesar de que la 192.168.200.118 es la que más pedidos totales tuvo), aunque en este caso se observa también la IP 0.0.0.0, que como mencionamos anteriormente responde a una técnica que se aplica para detectar direcciones duplicadas.\\
 
 
 
