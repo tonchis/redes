@@ -15,8 +15,6 @@ from constants import CLOSED, SYN_RCVD, ESTABLISHED, SYN_SENT,\
                       LAST_ACK, CLOSING
 from packet import SYNFlag, ACKFlag, FINFlag
 import time
-import random
-import math
 
 
 class IncomingPacketHandler(object):
@@ -44,13 +42,11 @@ class IncomingPacketHandler(object):
                 # o equivalente la probabilidad de que salga 1 con un dado de 'maximo' caras equilibrado
                 drop = (random.randint(1, maximo) == 1)
         if(not drop):
-            #print "NO DROPEO"
             ack_packet = self.build_packet()
             if(self.protocol.delay > 0):
                 time.sleep(self.protocol.delay)
             self.socket.send(ack_packet)
-        #else:
-            #print "DROPEO"    
+
     def handle(self, packet):
         state = self.protocol.state
         if state == LISTEN:

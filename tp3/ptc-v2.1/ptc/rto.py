@@ -12,8 +12,9 @@
 
 import threading
 
-from constants import INITIAL_RTO, MAX_RTO, ALPHA, BETA, K
+from constants import INITIAL_RTO, MAX_RTO, ALPHA, BETA, K, CLOCK_TICK
 from seqnum import SequenceNumber
+import pdb
 
 
 # Estimación de RTO según el RFC 6298, pero implementado en forma naive.
@@ -55,6 +56,7 @@ class RTOEstimator(object):
     def back_off_rto(self):
         with self.lock:
             self.rto = min(MAX_RTO, 2 * self.rto)
+            print self.rtt*CLOCK_TICK, " ", self.rto *CLOCK_TICK
             
     def clear_rtt(self):
         with self.lock:
@@ -69,9 +71,11 @@ class RTOEstimator(object):
                 return
             if self.ack_covers_tracked_packet(ack_packet.get_ack_number()):
                 sampled_rtt = self.protocol.get_ticks() - self.rtt_start_time
+                #pdb.set_trace()
                 self.rtt = sampled_rtt
                 self.update_rtt_estimation_with(sampled_rtt)
                 self.update_rto()
+                #print (self.rto*CLOCK_TICK)
                 self.untrack()
                 
     def update_rtt_estimation_with(self, sampled_rtt):
@@ -91,6 +95,7 @@ class RTOEstimator(object):
             
     def update_rto(self):
         self.rto = self.srtt + max(1, K * self.rttvar)
+        print  self.rtt*CLOCK_TICK, " ", self.rto * CLOCK_TICK
     
     def ack_covers_tracked_packet(self, ack_number):
         iss = self.protocol.iss

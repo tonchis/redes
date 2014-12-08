@@ -271,6 +271,7 @@ class PTCProtocol(object):
                 # viejo que aún no fue reconocido.
                 self.rto_estimator.back_off_rto()
                 packet = self.rqueue.head()
+                #print "RETRANSMITO"
                 self.send_and_queue(packet, is_retransmission=True)
             
             if self.write_stream_open or \
