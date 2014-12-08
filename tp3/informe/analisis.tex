@@ -1,5 +1,7 @@
 \section{Análisis}
 
+\subsection{Experimento 1}
+
 El primer experimento que creímos útil es la prueba de suficientes combinaciones significativas de valores de $\alpha$ y $\beta$ para intentar identificar un par de valores de óptimo comportamiento. Esto lo hicimos fijando otras variables en algunos valores que nos parecieron coherentes (delay de 2 segundos y sin indeterminismo en los dropeos), para sólamente mirar dichas variables.\\
 
 \indent Para poder evaluar esto, elegimos valores entre 0.1 y 0.9, aumentando en cada paso en 0.1 la variable analizada. Probamos algunos valores en el medio pero consideramos que aumentar la granularidad no nos daría cambios significativos en los resultados. Esto nos da una matríz de 81 resultados, los cuales, para poder analizarlos, partimos en 9 gráficos\footnote{Aparte de estas imágenes, debajo de cada uno se encuentra un link a su versión interactiva, para poder apreciar mejor los datos.}, fijando cada valor de $\alpha$ y graficando las variaciones de los $\beta$.\\
@@ -66,3 +68,10 @@ El gráfico anterior lo dejamos para dimensionar la convergencia y los valores e
 \end{center}
 
 Para los próximos experimentos, utilizaremos estos que hemos determinado como mejores pares de $\alpha$ y $\beta$ para analizar como se comportan los mismos cuando se agrega la nueva variable de \textbf{probabilidad de dropeo} de un paquete.
+
+\subsection{Experimento 2}
+
+\begin{center}
+	\includegraphics[scale=0.35]{graphics/tendencia_RTO_drop.png}
+	\textit{Gráfico interactivo en:} http://goo.gl/6aM368
+\end{center}
