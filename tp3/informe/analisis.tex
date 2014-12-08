@@ -4,7 +4,7 @@ El primer experimento que creímos útil es la prueba de suficientes combinacion
 
 \indent Para poder evaluar esto, elegimos valores entre 0.1 y 0.9, aumentando en cada paso en 0.1 la variable analizada. Probamos algunos valores en el medio pero consideramos que aumentar la granularidad no nos daría cambios significativos en los resultados. Esto nos da una matríz de 81 resultados, los cuales, para poder analizarlos, partimos en 9 gráficos\footnote{Aparte de estas imágenes, debajo de cada uno se encuentra un link a su versión interactiva, para poder apreciar mejor los datos.}, fijando cada valor de $\alpha$ y graficando las variaciones de los $\beta$.\\
 
-\indent En todos los gráficos, aparte del resultado de cada $\beta$ con el $\alpha$ de dicha corrida, se encuentra una línea constante que representa el \textbf{promedio de RTT} el cual en el caso ideal, sería el mismo valor que el \textbf{RTO}. La elección de mejor par de $\alpha$ y $\beta$ la hicimos bajo este criterio.
+\indent En todos los gráficos, aparte del resultado de cada $\beta$ con el $\alpha$ de dicha corrida, se encuentra una línea constante que representa el \textbf{promedio de RTT} el cual en el caso ideal, sería el mismo valor que el \textbf{RTO}. La elección de mejor par de $\alpha$ y $\beta$ la hicimos bajo este criterio, viendo para cada valor de $\alpha$, el valor de $\beta$ que más rápido llega a parecerse al RTT promedio y el que más estable se mantiene a lo largo de las pruebas (pues puede que alguno llegue rápido pero luego de algunas iteraciones empiece a mostrar comportamiento errático y no sea tan bueno en general).
 
 \begin{center}
 	\includegraphics[scale=0.35]{graphics/rto_vs_paquetes_a_1.png}
