@@ -1,10 +1,16 @@
 \section{Desarrollo}
 
-\indent \indent Para el desarrollo de este Trabajo Pŕactico se realizaron modificaciones al código fuente del protocolo PTC presentado por la cátedra. Parte de las modificaciones se debieron a las consignas del trabajo, no obstante lo cual se aplicaron más cambios con el objeto de facilitar la realización de los experimentos.\\
+\indent Para el desarrollo de este Trabajo Pŕactico se realizaron modificaciones al código fuente del protocolo PTC presentado por la cátedra. Parte de las modificaciones se debieron a las consignas del trabajo, no obstante lo cual se aplicaron más cambios con el objeto de facilitar la realización de los experimentos.\\
+
 \indent Principalmente se modificó el archivo \textbf{handler.py}, en particular el método \textbf{send\_ack}, que en un principio era el encargado de enviar paquetes PTC solamente con el flag ACK encendido. Las modificaciones en esta porción del código se correspondieron con la introducción de un delay a la hora de enviar este tipo de paquetes además de decidir si efectivamente se realizará el envío del paquete basado en una cierta probabilidad de dropeo de paquetes dada.\\
+
 \indent Estos nuevos  valores de delay y probabilidad de dropeo se pasan por parámetro a la hora de inicializar un Socket PTC y se utilizan también al momento de inicialización de una instancia del protocolo. Por esto, se modificaron también los archivos \textbf{ptc\_socket.py} y \textbf{protocol.py}, donde se agregaron atributos a las clases correspondiente que reflejaron estos valores de customización.\\
+
 \indent Acerca de la probabilidad que debe introducirse como parámetro, creemos necesario mencionar que esperamos un valor que pueda expresarse de la forma $\frac{1}{n}$, siendo $n$ un número entero. Esto se decidió así para no complicar en demasía las modificaciones a realizar y porque consideramos que con probabilidades de esa forma era suficiente para realizar los análisis correspondientes.\\
-\indent La nueva versión de \textbf{send\_ack} funciona, entonces, de la siguiente manera:\\
+
+La nueva versión de \textbf{send\_ack} funciona, entonces, de la siguiente manera:\\
 \indent Dada la probabilidad de dropeo, la invierte para obtener un número entero $n$. Con ese valor de $n$ como límite se obtiene un número entero entre 1 y $n$, haciendo uso de funciones nativas de python que hacen uso de distribución uniforme. Luego, el paquete se enviará si y solo si ese número obtenido es igual a 1, efectivizando la probabilidad de dropeo en $\frac{1}{n}$.\\
+
 \indent Si corresponde enviar el paquete entonces se aplica un delay de tantos segundos como se haya especificado a la hora de crear el socket PTC. Simulamos ese delay mediante un sleep.\\
+
 \indent Finalmente la última modificación que se realizó al código fuente fue el agregado de dos atributos a la clase RTOEstimator, que se corresponde con el alpha y beta a utilizar en los cálculos de estimación del RTO y los consiguiente cambios para que los cálculos los utilicen. Esto se hizo al notar al momento de experimentar que no se estaban modificando dichos valores.\\
