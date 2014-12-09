@@ -1,16 +1,29 @@
 \section{Desarrollo}
 
-\indent Para el desarrollo de este Trabajo Pŕactico se realizaron modificaciones al código fuente del protocolo PTC presentado por la cátedra. Parte de las modificaciones se debieron a las consignas del trabajo, no obstante lo cual se aplicaron más cambios con el objeto de facilitar la realización de los experimentos.\\
+Para el desarrollo de este Trabajo Pŕactico se realizaron modificaciones al código fuente del protocolo PTC presentado por la cátedra. Parte de las modificaciones se debieron a las consignas del trabajo, no obstante lo cual se aplicaron más cambios con el objeto de facilitar la realización de los experimentos.\newline
 
-\indent Principalmente se modificó el archivo \textbf{handler.py}, en particular el método \textbf{send\_ack}, que en un principio era el encargado de enviar paquetes PTC solamente con el flag ACK encendido. Las modificaciones en esta porción del código se correspondieron con la introducción de un delay a la hora de enviar este tipo de paquetes además de decidir si efectivamente se realizará el envío del paquete basado en una cierta probabilidad de dropeo de paquetes dada.\\
+Principalmente se modificó el archivo \textbf{handler.py}, en particular el método \textbf{send\_ack}, que en un principio era el encargado de enviar paquetes PTC solamente con el flag ACK encendido. Las modificaciones en esta porción del código se correspondieron con la introducción de un delay a la hora de enviar este tipo de paquetes además de decidir si efectivamente se realizará el envío del paquete basado en una cierta probabilidad de dropeo de paquetes dada.\newline
 
-\indent Estos nuevos  valores de delay y probabilidad de dropeo se pasan por parámetro a la hora de inicializar un Socket PTC y se utilizan también al momento de inicialización de una instancia del protocolo. Por esto, se modificaron también los archivos \textbf{ptc\_socket.py} y \textbf{protocol.py}, donde se agregaron atributos a las clases correspondiente que reflejaron estos valores de customización.\\
+Estos nuevos  valores de delay y probabilidad de dropeo se pasan por parámetro a la hora de inicializar un Socket PTC y se utilizan también al momento de inicialización de una instancia del protocolo. Por esto, se modificaron también los archivos \textbf{ptc\_socket.py} y \textbf{protocol.py}, donde se agregaron atributos a las clases correspondiente que reflejaron estos valores de customización.\newline
 
-\indent Acerca de la probabilidad que debe introducirse como parámetro, creemos necesario mencionar que esperamos un valor que pueda expresarse de la forma $\frac{1}{n}$, siendo $n$ un número entero. Esto se decidió así para no complicar en demasía las modificaciones a realizar y porque consideramos que con probabilidades de esa forma era suficiente para realizar los análisis correspondientes.\\
+Acerca de la probabilidad que debe introducirse como parámetro, creemos necesario mencionar que esperamos un valor que pueda expresarse de la forma $\frac{1}{n}$, siendo $n$ un número entero. Esto se decidió así para no complicar en demasía las modificaciones a realizar y porque consideramos que con probabilidades de esa forma era suficiente para realizar los análisis correspondientes.\newline
 
 La nueva versión de \textbf{send\_ack} funciona, entonces, de la siguiente manera:\\
-\indent Dada la probabilidad de dropeo, la invierte para obtener un número entero $n$. Con ese valor de $n$ como límite se obtiene un número entero entre 1 y $n$, haciendo uso de funciones nativas de python que hacen uso de distribución uniforme. Luego, el paquete se enviará si y solo si ese número obtenido es igual a 1, efectivizando la probabilidad de dropeo en $\frac{1}{n}$.\\
+Dada la probabilidad de dropeo, la invierte para obtener un número entero $n$. Con ese valor de $n$ como límite se obtiene un número entero entre 1 y $n$, haciendo uso de funciones nativas de python que hacen uso de distribución uniforme. Luego, el paquete se enviará si y solo si ese número obtenido es igual a 1, efectivizando la probabilidad de dropeo en $\frac{1}{n}$.\newline
 
-\indent Si corresponde enviar el paquete entonces se aplica un delay de tantos segundos como se haya especificado a la hora de crear el socket PTC. Simulamos ese delay mediante un sleep.\\
+Si corresponde enviar el paquete entonces se aplica un delay de tantos segundos como se haya especificado a la hora de crear el socket PTC. Simulamos ese delay mediante un sleep.\newline
 
-\indent Finalmente la última modificación que se realizó al código fuente fue el agregado de dos atributos a la clase RTOEstimator, que se corresponde con el alpha y beta a utilizar en los cálculos de estimación del RTO y los consiguiente cambios para que los cálculos los utilicen. Esto se hizo al notar al momento de experimentar que no se estaban modificando dichos valores.\\
+Finalmente la última modificación que se realizó al código fuente fue el agregado de dos atributos a la clase RTOEstimator, que se corresponde con el alpha y beta a utilizar en los cálculos de estimación del RTO y los consiguiente cambios para que los cálculos los utilicen. Esto se hizo al notar al momento de experimentar que no se estaban modificando dichos valores.\newline
+
+\subsection{Experimentación}
+
+Entendiendo que el \textbf{RTO} óptimo del protocolo es el \textbf{RTT}, lo primero que decidimos investigar fue cómo afectaban diferentes rangos de $\alpha$ y $\beta$ a \textbf{PTC} en el escenario ideal sin pérdida de paquetes. Para esto fue necesario primero establecer los parámetros de nuestro experimento y las primeras pruebas arrojaron que alrededor de 50 paquetes eran más que suficientes para lograr que el cálculo del \textbf{RTO} se estabilizara.\newline
+
+Sabiendo esto ejecutamos la transferencia de 50 paquetes entre cliente y servidor para par $(\alpha, \beta)$ con $\alpha \in [0.1, 0.9]$ y $\beta \in [0.1, 0.9]$. Luego de realizadas estas pruebas pudimos definir cuál era el $\beta$ que más acercaba el \textbf{RTO} al \textbf{RTT} promedio para cada $\alpha$.\newline
+
+Habiendo seleccionado un $\beta$ para cada $\alpha$ procedimos a realizar pruebas con probabilidad de dropeo de paquetes. Nuevamente, fue necesario definir qué probabilidades considerábamos apropiadas para realiar estos nuevos experimentos.\newline
+
+Consideramos que una red, para que sea efectivamente usable, no puede tener una gran probabilidad de pérdida de paquetes. Teniendo esto en cuenta imaginamos que una red donde un paquete tiene una probabilidad $\frac{1}{2}$ de perderse no sería muy útil y tomamos como límite este valor. Las probabilidades de pérdida que elegimos para realizar las pruebas fue $0.1$, $0.3$ y $0.5$.\newline
+
+Este nuevo experimento nos permitió determinar si el mejor $\alpha$, $\beta$ seguía manteniéndose con pérdida de paquetes. También vale mencionar que nos pareció interesante contrastar el comportamiento de estos valores contra los resultados obtenidos con los valores óptimos propuestos en el RFC 6298, $\alpha = 0.125$ y $\beta = 0.25$ para el último experimento.
+
