@@ -32,6 +32,11 @@
 	\textit{Gráfico interactivo en:} http://goo.gl/Db08yU
 \end{center}
 
+
+\indent Notar que estos primeros cuatro gráficos están a una escala más que pequeña que algunos de los que siguen a continuación. En particular, estos gŕaficos pueden resultar medio caóticos, pero dejan en claro que las curvas no son suaves sino que poseen varios picos. En esta escala pequeña queda un poco más claro el criterio de elección que hemos realizado, eligiendo en cada caso la curva y los $\alpha$ y $\beta$ que nos pareció que convergieron a un velocidad razonables y que además fueron los que más se estabilizaron cerca del RTT promedio.\\
+\indent Es fácil también observar que todos decaen rápidamente de su valor inicial y se acercan al RTT y luego van fluctuando alrededor de dicho valor.\\
+\indent Los siguientes dos gráficos tienen una escala un poco más grande. En ellos se puede ver claramente como la estimación del RTO va decreciendo hasta acercarse a un valor parecido al RTT para luego ir fluctuando cerca de ese valor:\\	
+
 \begin{center}
 	\includegraphics[scale=0.35]{graphics/rto_vs_paquetes_a_5.png}
 	\textit{Gráfico interactivo en:} http://goo.gl/VNV8xF
@@ -41,6 +46,7 @@
 	\includegraphics[scale=0.35]{graphics/rto_vs_paquetes_a_6.png}
 	\textit{Gráfico interactivo en:} http://goo.gl/CN4joc
 \end{center}
+
 
 \begin{center}
 	\includegraphics[scale=0.35]{graphics/rto_vs_paquetes_a_7.png}
@@ -57,14 +63,17 @@
 	\textit{Gráfico interactivo en:} http://goo.gl/QXH7cA
 \end{center}
 
-De cada uno de los gráficos, extrajimos el mejor par $\alpha$, $\beta$ y los juntamos en un mismo gráfico para, entre ellos, elegir el mejor de las 81 posibilidades. Según esta experimentación, entonces, los mejores valores en este protocolo para $\alpha$ y $\beta$ en nuestro caso, nos dieron cuando $\alpha = 0.4$ y $\beta = 0.7$.
+\indent
+
+\indent El siguiente gŕafico se corresponde con la contraposición de las curvas correspondientes a las $\alpha$ y $\beta$ elegidos de cada uno de los gŕafico.Comparando los resultados, concluimos que para nuestra experimentación los valores que mejores resultados nos dieron fueron $\alpha = 0.4$ y $\beta = 0.7$.\\ 
 
 \begin{center}
 	\includegraphics[scale=0.35]{graphics/best_pairs.png}
 	\textit{Gráfico interactivo en:} http://goo.gl/FBA1p2
 \end{center}
 
-El gráfico anterior lo dejamos para dimensionar la convergencia y los valores en general. El siguiente gráfico es el que realmente hace notar que de todas las opciones, la anteriormente elegida es la que más cerca se encuentra del promedio de RTT, y además, la que más estable mantiene dicha cercanía.
+\indent El gráfico anterior lo dejamos para dimensionar la convergencia y los valores en general. El siguiente gráfico es el que realmente justifica que de todas las opciones, la anteriormente mencionada sea la elegido, ya que es la que más cerca se encuentra del promedio de RTT, y además, la que más estable mantiene dicha cercanía, aunque en contraposición parece converger un poco más lentamente que la mayoría de las demás curvas del gráfico.\\
+\indent Este resultado parece chocar con los valores recomendados de $\alpha = 0.125$  y $\beta = 0.25$ como valores óptimos a utilizarse que se proponen en el RFC que refiere al cálculo del RTO. Si bien en esta etapa no se exper	imentó con dichos valores, era sensato imaginar que de todas las corridas las que se correspondían con los $\alpha$ y $\beta$ más cercanos a tales valores serían las que mejores resultados proveyeran.\\
 
 \begin{center}
 	\includegraphics[scale=0.35]{graphics/best_pairs_zoom.png}
