@@ -19,7 +19,7 @@ Finalmente la última modificación que se realizó al código fuente fue el agr
 
 Entendiendo que el \textbf{RTO} óptimo del protocolo es el \textbf{RTT}, lo primero que decidimos investigar fue cómo afectaban diferentes rangos de $\alpha$ y $\beta$ a \textbf{PTC} en el escenario ideal sin pérdida de paquetes. Para esto fue necesario primero establecer los parámetros de nuestro experimento y las primeras pruebas arrojaron que alrededor de 50 paquetes eran más que suficientes para lograr que el cálculo del \textbf{RTO} se estabilizara.\newline
 
-Sabiendo esto ejecutamos la transferencia de 50 paquetes entre cliente y servidor para par $(\alpha, \beta)$ con $\alpha \in [0.1, 0.9]$ y $\beta \in [0.1, 0.9]$. Luego de realizadas estas pruebas pudimos definir cuál era el $\beta$ que más acercaba el \textbf{RTO} al \textbf{RTT} promedio para cada $\alpha$.\newline
+Sabiendo esto ejecutamos la transferencia de 50 paquetes entre cliente y servidor para par $(\alpha, \beta)$ con $\alpha \in$ [0.1, 0.9] y $\beta \in$ [0.1, 0.9]. Luego de realizadas estas pruebas pudimos definir cuál era el $\beta$ que más acercaba el \textbf{RTO} al \textbf{RTT} promedio para cada $\alpha$.\newline
 
 Habiendo seleccionado un $\beta$ para cada $\alpha$ procedimos a realizar pruebas con probabilidad de dropeo de paquetes. Nuevamente, fue necesario definir qué probabilidades considerábamos apropiadas para realiar estos nuevos experimentos.\newline
 
