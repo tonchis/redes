@@ -19,8 +19,8 @@ except:
 
 SERVER_IP = '127.0.0.1'
 SERVER_PORT = 12345
-TRANSFER_DATA = 'abcdefghijklmnopqrstuvwxyz' * 1000
-TRANSFER_CHUNK_SIZE = 100
+MESSAGE = 'inadsuiuhsasjjaoijswoioiwe' * 1000
+MESSAGE_SIZE = 100
 
 received = str()
 
@@ -36,6 +36,6 @@ with Socket(2,0.1) as server_sock:
     # obstante, luego de diez segundos de no recibir conexiones, PTC se
     # dará por vencido.
     server_sock.accept()
-    data_received = ''
-    while len(data_received) < len(TRANSFER_DATA):
-        data_received += server_sock.recv(TRANSFER_CHUNK_SIZE)
+    message_received = ''
+    while len(message_received) < len(MESSAGE):
+        message_received += server_sock.recv(MESSAGE_SIZE)

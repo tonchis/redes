@@ -19,8 +19,8 @@ except:
 SERVER_IP = '127.0.0.1'
 SERVER_PORT = 12345
 CLOCK_TICK = 0.01
-TRANSFER_DATA = 'abcdefghijklmnopqrstuvwxyz' * 1000
-TRANSFER_CHUNK_SIZE = 100
+MESSAGE = 'inadsuiuhsasjjaoijswoioiwe' * 1000
+MESSAGE_SIZE = 100
 # Usar sockets PTC dentro de bloques with. Esto nos asegura que los recursos
 # subyacentes serán liberados de forma adecuada una vez que el socket ya no
 # se necesite.
@@ -37,10 +37,10 @@ with Socket() as client_sock:
     # y recibir datos arbitrarios.
     client_sock.protocol.rto_estimator.alpha = alpha
     client_sock.protocol.rto_estimator.beta = beta
-    data_index = 0
-    while data_index < len(TRANSFER_DATA):
-        chunk_size = min(len(TRANSFER_DATA) - data_index, TRANSFER_CHUNK_SIZE)
-        chunk = TRANSFER_DATA[data_index : data_index + chunk_size]
-        client_sock.send(chunk)
-        data_index = data_index + chunk_size
+    i = 0
+    while i < len(MESSAGE):
+        message_size = min(len(MESSAGE) - i, MESSAGE_SIZE)
+        message = MESSAGE[i : i + message_size]
+        i = i + message_size
+        client_sock.send(message)
     #client_sock.shutdown(SHUT_WR)
